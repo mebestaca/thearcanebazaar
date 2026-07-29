@@ -3,40 +3,48 @@ import Link from "next/link";
 
 const NavBar = () => {
   return (
-    <header className="border-b border-gray-200 bg-white px-6 py-4">
-      <div className="mx-auto flex max-w-2xl items-center justify-between">
-        <div>
-          <h1 className="text-lg font-bold text-gray-900">The Arcane Bazaar</h1>
-          <p className="text-xs text-gray-400">
-            Curios, Relics, and Forgotten Magic
-          </p>
-        </div>
+ <header className="border-b border-amber-900/20 bg-[#1b1625] px-6 py-5 text-amber-100">
+  <div className="mx-auto flex max-w-6xl items-center justify-between">
 
-        <nav className="flex items-center font-medium text-gray-900">
-          <Link href="/" className="hover:text-blue-600 mr-4">
-            Home
-          </Link>
-          <Link href="/wares" className="hover:text-blue-600">
-            Wares
-          </Link>
-          <Link href="/relics" className="hover:text-blue-600">
-            Relics
-          </Link>
-          <Link href="/ledger" className="hover:text-blue-600">
-            Merchant's Ledger
-          </Link>
-          <Link href="/ledger" className="hover:text-blue-600">
-            Merchant's Ledger
-          </Link>
-          <Link href="/adventurer" className="hover:text-blue-600">
-            Adventurer
-          </Link>
-          <Link href="/inventory" className="hover:text-blue-600">
-            Inventory
-          </Link>
-        </nav>
-      </div>
-    </header>
+    <div>
+      <h1 className="text-2xl font-bold tracking-wide text-amber-300">
+        The Arcane Bazaar
+      </h1>
+
+      <p className="text-xs italic text-amber-100/60">
+        Curios, Relics, and Forgotten Magic
+      </p>
+    </div>
+
+
+    <nav className="flex items-center gap-6 text-sm font-medium">
+      <Link href="/" className="transition hover:text-amber-300">
+        Home
+      </Link>
+
+      <Link href="/wares" className="transition hover:text-amber-300">
+        Wares
+      </Link>
+
+      <Link href="/relics" className="transition hover:text-amber-300">
+        Relics
+      </Link>
+
+      <Link href="/ledger" className="transition hover:text-amber-300">
+        Merchant's Ledger
+      </Link>
+
+      <Link href="/adventurer" className="transition hover:text-amber-300">
+        Adventurer
+      </Link>
+
+      <Link href="/inventory" className="transition hover:text-amber-300">
+        Inventory
+      </Link>
+    </nav>
+
+  </div>
+</header>
   );
 }
 
