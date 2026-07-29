@@ -16,8 +16,23 @@ const NavBar = () => {
           <Link href="/" className="hover:text-blue-600 mr-4">
             Home
           </Link>
-          <Link href="/courses" className="hover:text-blue-600">
-            Courses
+          <Link href="/wares" className="hover:text-blue-600">
+            Wares
+          </Link>
+          <Link href="/relics" className="hover:text-blue-600">
+            Relics
+          </Link>
+          <Link href="/ledger" className="hover:text-blue-600">
+            Merchant's Ledger
+          </Link>
+          <Link href="/ledger" className="hover:text-blue-600">
+            Merchant's Ledger
+          </Link>
+          <Link href="/adventurer" className="hover:text-blue-600">
+            Adventurer
+          </Link>
+          <Link href="/inventory" className="hover:text-blue-600">
+            Inventory
           </Link>
         </nav>
       </div>
