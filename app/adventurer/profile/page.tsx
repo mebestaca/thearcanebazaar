@@ -100,6 +100,15 @@ async function logOut() {
   );
 }
 
+const memberSince = new Date(profile.created_at).toLocaleDateString(
+  undefined,
+  {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  }
+);
+
 return ( 
   <main className="min-h-screen bg-[#1B1625] px-6 py-16 text-amber-100"> 
     <div className="mx-auto max-w-4xl">
@@ -140,25 +149,30 @@ return (
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2">
 
-          <div className="rounded-xl border border-amber-900/30 bg-black/20 p-5">
+          <div className="rounded-xl border border-amber-900/30 bg-black/20 p-5 text-center">
             <p className="text-xs uppercase tracking-widest text-amber-100/40">
-              Full Name
+              Member Since
             </p>
 
-            <p className="mt-2 text-lg text-amber-100">
-              {profile.full_name}
+            <p className="mt-4 font-serif text-xl font-bold text-amber-300">
+              {memberSince}
             </p>
           </div>
 
-          <div className="rounded-xl border border-amber-900/30 bg-black/20 p-5">
+          <div className="rounded-xl border border-amber-900/30 bg-black/20 p-5 text-center">
             <p className="text-xs uppercase tracking-widest text-amber-100/40">
-              Username
+              Adventurer Level
             </p>
 
-            <p className="mt-2 text-lg text-amber-100">
-              @{profile.username}
+            <p className="mt-2 font-serif text-2xl font-bold text-amber-300">
+              Level 1
+            </p>
+
+            <p className="mt-1 text-sm text-amber-100/50">
+              Novice Adventurer
             </p>
           </div>
+
         </div>
 
         <div className="mt-8 flex justify-center">
