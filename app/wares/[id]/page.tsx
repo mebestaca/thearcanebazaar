@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Product } from '@/types';
 import { supabase } from '@/lib/supabase/supabase';
+import AddToCartSection from '@/components/AddToCartSection';
 
 export const revalidate = 0;
 
@@ -61,7 +62,7 @@ export default async function ProductPage({
             {product.stock > 0 ? `${product.stock} in stock` : 'Currently unavailable'}
           </p>
 
-          {/* <AddToCartSection product={product} /> */}
+          <AddToCartSection product={product} />
         </div>
       </div>
     </main>
