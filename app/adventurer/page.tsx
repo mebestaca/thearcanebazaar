@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -124,7 +124,7 @@ export default function LoginPage() {
             <button
               onClick={logIn}
               disabled={loading}
-              className="w-full rounded-lg bg-gradient-to-r from-amber-700 to-amber-500 py-3 font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+              className="w-full rounded-lg bg-linear-to from-amber-700 to-amber-500 py-3 font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
             >
               {loading ? "Entering..." : "⚔️ Enter the Bazaar"}
             </button>
