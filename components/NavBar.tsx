@@ -45,13 +45,12 @@ const NavBar = () => {
 
       <Link href="/inventory" className="transition hover:text-amber-300">
         <span>Inventory</span>
-              <span className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-black text-white text-xs">
-                 {totalItems > 0 && (
-                    <span className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-black text-white text-xs">
-                      {totalItems}
-                    </span>
-                  )}
-              </span>
+          {totalItems > 0 && (
+            <span className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-black text-white text-xs">
+              {totalItems}
+            </span>
+          )}
+         
       </Link>
     </nav>
 
