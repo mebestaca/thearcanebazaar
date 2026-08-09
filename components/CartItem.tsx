@@ -11,7 +11,7 @@ export default function CartItem({ item }: { item: CartItemType }) {
 
   return (
     <div className="flex items-center gap-4 py-4 border-b last:border-b-0">
-      <Link href={`/product/${product.id}`} className="shrink-0">
+      <Link href={`/wares/${product.id}`} className="shrink-0">
         <div className="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
           {product.image_url ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -25,7 +25,7 @@ export default function CartItem({ item }: { item: CartItemType }) {
       </Link>
 
       <div className="flex-1 min-w-0">
-        <Link href={`/product/${product.id}`}>
+        <Link href={`/wares/${product.id}`}>
           <h3 className="font-medium text-gray-900 truncate">{product.name}</h3>
         </Link>
         <p className="text-sm text-gray-500">${product.price.toFixed(2)} each</p>
