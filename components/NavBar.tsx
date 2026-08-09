@@ -1,7 +1,12 @@
-import React from 'react';
+'use client'
+
 import Link from "next/link";
+import { useCartStore } from '@/store/cart-store';
 
 const NavBar = () => {
+
+  const totalItems = useCartStore((s) => s.getTotalItems());
+
   return (
  <header className="border-b border-amber-900/20 bg-[#1b1625] px-6 py-5 text-amber-100">
   <div className="mx-auto flex max-w-6xl items-center justify-between">
@@ -39,7 +44,14 @@ const NavBar = () => {
       </Link>
 
       <Link href="/inventory" className="transition hover:text-amber-300">
-        Inventory
+        <span>Inventory</span>
+              <span className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-black text-white text-xs">
+                 {totalItems > 0 && (
+                    <span className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-black text-white text-xs">
+                      {totalItems}
+                    </span>
+                  )}
+              </span>
       </Link>
     </nav>
 
