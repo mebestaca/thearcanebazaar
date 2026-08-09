@@ -3,16 +3,19 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
+  const [emailTouched, setEmailTouched] = useState(false);
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  const emailIsValid =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   useEffect(() => {
     const {
@@ -34,7 +37,13 @@ export default function LoginPage() {
   }
 
   async function logIn() {
+    if (!emailIsValid) {
+        setMessage("Please enter a valid email address.");
+        return;
+    }
+
     setLoading(true);
+    setMessage("");
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
@@ -55,7 +64,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0d0a07] px-6 py-16 text-amber-100">
+    <main className="min-h-screen bg-[#1b1625] px-6 py-16 text-amber-100">
       <div className="mx-auto max-w-md">
 
         <div className="mb-10 text-center">
@@ -75,7 +84,7 @@ export default function LoginPage() {
 
         </div>
 
-        <div className="rounded-2xl border border-amber-900/40 bg-[#17100b] p-8 shadow-2xl">
+        <div className="rounded-2xl border border-amber-700/40 bg-[#2A2338] p-8 shadow-2xl">
 
           <h2 className="font-serif text-2xl font-bold text-amber-300">
             Enter the Bazaar
@@ -97,8 +106,28 @@ export default function LoginPage() {
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-amber-900/40 bg-black/30 px-4 py-3 outline-none transition focus:border-amber-500"
+                onBlur={() => setEmailTouched(true)}
+                className={`w-full rounded-lg border bg-black/30 px-4 py-3 outline-none transition ${
+                    emailTouched 
+                        ? emailIsValid
+                            ? "border-green-500"
+                            : "border-red-500"
+                        : "border-amber-900/40"
+                } focus:border-amber-500`}
               />
+
+              {emailTouched && !emailIsValid && (
+                <p className="mt-2 text-sm text-red-400">
+                    Please enter a valid email address.
+                </p>
+              )}
+
+              {emailTouched && emailIsValid && (
+                <p className="mt-2 text-sm text-green-400">
+                    ✓ Email looks good.
+                </p>
+              )}
+
             </div>
 
             <div>
@@ -143,7 +172,7 @@ export default function LoginPage() {
 
             <button
               onClick={signInWithGoogle}
-              className="flex w-full items-center justify-center gap-3 rounded-lg border border-amber-900/40 bg-black/20 px-4 py-3 font-medium text-amber-100 transition hover:border-amber-500 hover:bg-amber-950/20"
+              className="flex w-full items-center justify-center gap-3 rounded-lg border border-amber-900/40 bg-white px-4 py-3 font-medium text-black transition-all duration-200 hover:bg-gray-100 hover:border-amber-700/50"
             >
                 <GoogleIcon />
               Continue with Google
