@@ -188,7 +188,7 @@ export default function LoginPage() {
             </p>
 
             <Link
-              href="/signup"
+              href="/adventurer/signup"
               className="mt-2 inline-block font-medium text-amber-400 transition hover:text-amber-300"
             >
               Create an Adventurer Account →
