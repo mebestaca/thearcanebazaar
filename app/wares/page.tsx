@@ -1,107 +1,25 @@
-"use client";
+import ProductCard from "@/components/ProductCard";
+import type { Product } from '@/types';
+import { supabase } from "@/lib/supabase/supabase";
 
-import { useMemo, useState } from "react";
-import Link from "next/link";
 
-const products = [
-  {
-    id: 1,
-    name: "Dragonbone Dice Set",
-    category: "Dice",
-    rarity: "Rare",
-    price: 44.99,
-  },
-  {
-    id: 2,
-    name: "Goblin Warband",
-    category: "Miniatures",
-    rarity: "Common",
-    price: 29.99,
-  },
-  {
-    id: 3,
-    name: "Dungeon Master's Tome",
-    category: "Books",
-    rarity: "Epic",
-    price: 59.99,
-  },
-  {
-    id: 4,
-    name: "Crystal Cavern Terrain",
-    category: "Terrain",
-    rarity: "Legendary",
-    price: 89.99,
-  },
-  {
-    id: 5,
-    name: "Elven Dice Tray",
-    category: "Accessories",
-    rarity: "Uncommon",
-    price: 24.99,
-  },
-  {
-    id: 6,
-    name: "Lich Miniature",
-    category: "Miniatures",
-    rarity: "Rare",
-    price: 34.99,
-  },
-  {
-    id: 7,
-    name: "Potion Tokens",
-    category: "Accessories",
-    rarity: "Common",
-    price: 12.99,
-  },
-  {
-    id: 8,
-    name: "Castle Ruins",
-    category: "Terrain",
-    rarity: "Epic",
-    price: 79.99,
-  },
-];
+async function getProducts(): Promise<Product[]> {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-export default function WaresPage() {
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [sort, setSort] = useState("featured");
+  if (error) {
+    console.error('Error fetching products:', error.message);
+    return [];
+  }
+  return (data ?? []) as Product[];
+}
 
-  const filteredProducts = useMemo(() => {
-    let filtered = [...products];
+export default async function WaresPage() {
 
-    if (category !== "All") {
-      filtered = filtered.filter(
-        (product) => product.category === category
-      );
-    }
-
-    if (search.trim()) {
-      filtered = filtered.filter((product) =>
-        product.name
-          .toLowerCase()
-          .includes(search.toLowerCase())
-      );
-    }
-
-    switch (sort) {
-      case "price-low":
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-
-      case "price-high":
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-
-      case "name":
-        filtered.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        break;
-    }
-
-    return filtered;
-  }, [search, category, sort]);
+  const products = await getProducts();
+  
 
   return (
     <main className="min-h-screen bg-[#1b1625] text-amber-100">
@@ -144,8 +62,6 @@ export default function WaresPage() {
             </label>
 
             <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search wares..."
               className="w-full rounded-lg border border-amber-900/30 bg-[#1b1625] px-4 py-2 outline-none focus:border-amber-400"
             />
@@ -159,8 +75,6 @@ export default function WaresPage() {
             </label>
 
             <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
               className="w-full rounded-lg border border-amber-900/30 bg-[#1b1625] px-4 py-2"
             >
               <option>All</option>
@@ -180,8 +94,6 @@ export default function WaresPage() {
             </label>
 
             <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
               className="w-full rounded-lg border border-amber-900/30 bg-[#1b1625] px-4 py-2"
             >
               <option value="featured">Featured</option>
@@ -206,64 +118,19 @@ export default function WaresPage() {
 
           <div className="mb-8 flex items-center justify-between">
 
-            <h2 className="text-2xl font-bold text-amber-300">
+            {/* <h2 className="text-2xl font-bold text-amber-300">
               {filteredProducts.length} Wares Found
-            </h2>
+            </h2> */}
 
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-
-            {filteredProducts.map((product) => (
-
-              <div
-                key={product.id}
-                className="overflow-hidden rounded-xl border border-amber-900/30 bg-[#241d31] transition hover:-translate-y-1 hover:border-amber-400"
-              >
-
-                <div className="flex h-56 items-center justify-center bg-[#1b1625] text-amber-100/40">
-                  Product Image
-                </div>
-
-                <div className="p-6">
-
-                  <span className="rounded-full border border-amber-700 px-3 py-1 text-xs text-amber-300">
-                    {product.rarity}
-                  </span>
-
-                  <h3 className="mt-4 text-xl font-semibold">
-                    {product.name}
-                  </h3>
-
-                  <p className="mt-2 text-sm text-amber-100/60">
-                    {product.category}
-                  </p>
-
-                  <div className="mt-6 flex items-center justify-between">
-
-                    <span className="text-2xl font-bold text-amber-300">
-                      ${product.price}
-                    </span>
-
-                    <Link
-                      href={`/wares/${product.id}`}
-                      className="rounded-lg bg-amber-300 px-4 py-2 font-semibold text-[#1b1625] hover:bg-amber-200"
-                    >
-                      View
-                    </Link>
-
-                  </div>
-
-                </div>
-
-              </div>
-
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
-
           </div>
 
           {/* Pagination */}
-
           <div className="mt-12 flex justify-center gap-3">
 
             <button className="rounded-lg border border-amber-700 px-4 py-2 hover:border-amber-300">
