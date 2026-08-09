@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useCartStore } from '@/store/cart-store';
+import { useHydrated } from "@/store/use-hydrated";
 
 const NavBar = () => {
 
   const totalItems = useCartStore((s) => s.getTotalItems());
+  const hydrated = useHydrated();
 
   return (
  <header className="border-b border-amber-900/20 bg-[#1b1625] px-6 py-5 text-amber-100">
@@ -45,7 +47,7 @@ const NavBar = () => {
 
       <Link href="/inventory" className="transition hover:text-amber-300">
         <span>Inventory</span>
-          {totalItems > 0 && (
+          {hydrated && totalItems > 0 && (
             <span className="inline-flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-black text-white text-xs">
               {totalItems}
             </span>
