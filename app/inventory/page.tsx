@@ -1,4 +1,5 @@
 'use client'
+import CartItem from '@/components/CartItem';
 import { useCartStore } from '@/store/cart-store';
 import Link from 'next/link';
 import React from 'react'
@@ -22,6 +23,34 @@ const CartPage = () => {
             Continue shopping
           </Link>
         </div>
+
+        <>
+          <div className="bg-white border rounded-lg px-4">
+            {items.map((item) => (
+              <CartItem key={item.product.id} item={item} />
+            ))}
+          </div>
+
+          <div className="mt-6 flex items-center justify-between">
+            <button
+              onClick={clearCart}
+              className="text-sm text-gray-400 hover:text-red-600"
+            >
+              Clear cart
+            </button>
+            <div className="text-right">
+              <p className="text-sm text-gray-500">Total</p>
+              <p className="text-2xl font-bold text-gray-900">${totalPrice.toFixed(2)}</p>
+            </div>
+          </div>
+
+          <Link
+            href="/checkout"
+            className="mt-6 block text-center bg-black text-white py-3 rounded-md hover:bg-gray-800 transition-colors"
+          >
+            Proceed to checkout
+          </Link>
+        </>
     </main>
   )
 }
