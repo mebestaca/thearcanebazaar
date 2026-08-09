@@ -11,8 +11,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  // Never trust client-side validation alone — re-validate with the same
-  // zod schema on the server.
   const parsed = checkoutRequestSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(

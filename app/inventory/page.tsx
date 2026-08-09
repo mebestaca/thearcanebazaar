@@ -1,6 +1,7 @@
 'use client'
 import CartItem from '@/components/CartItem';
 import { useCartStore } from '@/store/cart-store';
+import { useHydrated } from '@/store/use-hydrated';
 import Link from 'next/link';
 
 const CartPage = () => {
@@ -8,6 +9,7 @@ const CartPage = () => {
   const items = useCartStore((s) => s.items);
   const totalPrice = useCartStore((s) => s.getTotalPrice());
   const clearCart = useCartStore((s) => s.clearCart);
+  const hydrated = useHydrated();
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-8">

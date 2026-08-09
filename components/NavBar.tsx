@@ -10,7 +10,7 @@ const NavBar = () => {
   const hydrated = useHydrated();
 
   return (
- <header className="border-b border-amber-900/20 bg-[#1b1625] px-6 py-5 text-amber-100">
+ <header className="border-b border-amber-900/20 bg-[#1b1625] px-6 py-5 text-amber-100 sticky top-0 z-10">
   <div className="mx-auto flex max-w-6xl items-center justify-between">
 
     <div>
