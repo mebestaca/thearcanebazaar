@@ -2,7 +2,6 @@
 import CartItem from '@/components/CartItem';
 import { useCartStore } from '@/store/cart-store';
 import Link from 'next/link';
-import React from 'react'
 
 const CartPage = () => {
 
@@ -12,18 +11,19 @@ const CartPage = () => {
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Your Cart</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">Your Inventory</h1>
 
+      {items.length === 0 ? (
       <div className="text-center border rounded-lg bg-white p-10">
-          <p className="text-gray-500 mb-4">Your cart is empty.</p>
+          <p className="text-gray-500 mb-4">Your inventory is empty.</p>
           <Link
             href="/"
             className="inline-block bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
           >
-            Continue shopping
+            Explore the Bazaar
           </Link>
         </div>
-
+      ) : (
         <>
           <div className="bg-white border rounded-lg px-4">
             {items.map((item) => (
@@ -51,6 +51,7 @@ const CartPage = () => {
             Proceed to checkout
           </Link>
         </>
+      )}
     </main>
   )
 }
