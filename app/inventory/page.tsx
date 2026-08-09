@@ -17,7 +17,7 @@ const CartPage = () => {
       <div className="text-center border rounded-lg bg-white p-10">
           <p className="text-gray-500 mb-4">Your inventory is empty.</p>
           <Link
-            href="/"
+            href="/wares"
             className="inline-block bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
           >
             Explore the Bazaar
