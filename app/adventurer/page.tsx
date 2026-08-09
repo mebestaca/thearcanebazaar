@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/supabase";
+import { loginSchema } from "@/lib/supabase/schema";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const emailIsValid =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const emailValidation = loginSchema.shape.email.safeParse(email);
 
   useEffect(() => {
     const {
@@ -37,15 +38,24 @@ export default function LoginPage() {
   }
 
   async function logIn() {
-    if (!emailIsValid) {
-        setMessage("Please enter a valid email address.");
-        return;
+    setMessage("");
+
+    const result = loginSchema.safeParse({
+      email,
+      password,
+    });
+
+    if (!result.success) {
+      setMessage(result.error.issues[0].message);
+      return;
     }
 
     setLoading(true);
-    setMessage("");
-
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+   
+    const { error } = await supabase.auth.signInWithPassword({ 
+      email, 
+      password 
+    });
 
     if (error) {
       setMessage("Wrong email or password.");
@@ -109,20 +119,20 @@ export default function LoginPage() {
                 onBlur={() => setEmailTouched(true)}
                 className={`w-full rounded-lg border bg-black/30 px-4 py-3 outline-none transition ${
                     emailTouched 
-                        ? emailIsValid
+                        ? emailValidation.success
                             ? "border-green-500"
                             : "border-red-500"
                         : "border-amber-900/40"
                 } focus:border-amber-500`}
               />
 
-              {emailTouched && !emailIsValid && (
+              {emailTouched && !emailValidation.success && (
                 <p className="mt-2 text-sm text-red-400">
-                    Please enter a valid email address.
+                    {emailValidation.error.issues[0].message}
                 </p>
               )}
 
-              {emailTouched && emailIsValid && (
+              {emailTouched && emailValidation.success && (
                 <p className="mt-2 text-sm text-green-400">
                     ✓ Email looks good.
                 </p>
