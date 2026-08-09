@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/supabase";
+import { signupSchema } from "@/lib/supabase/schema";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -19,37 +20,25 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
   async function signUp() {
     setMessage("");
 
-    if (!fullName || !username || !email || !password || !confirmPassword) {
-      setMessage("Please complete all fields.");
-      return;
-    }
+    const result = signupSchema.safeParse({
+      fullName,
+      username,
+      email,
+      password,
+      confirmPassword,
+    });
 
-    if (!emailIsValid) {
-      setMessage("Please enter a valid email.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setMessage("Passwords do not match.");
-      return;
-    }
-
-    if (password.length < 6) {
-      setMessage("Password must be at least 6 characters.");
+    if (!result.success) {
+      setMessage(result.error.issues[0].message);
       return;
     }
 
     setLoading(true);
 
-    const {
-      data,
-      error,
-    } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -107,7 +96,7 @@ export default function SignUpPage() {
           </p>
 
         </div>
-        
+
         <div className="rounded-2xl bg-[#2A2338] p-8 shadow-2xl">
 
           <div className="space-y-5">
