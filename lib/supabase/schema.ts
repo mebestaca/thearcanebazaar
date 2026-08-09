@@ -1,4 +1,4 @@
-import { email, z } from 'zod';
+import { z } from 'zod';
 
 /* LOGIN SCHEMA */
 export const loginSchema = z.object({

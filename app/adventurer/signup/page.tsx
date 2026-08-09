@@ -37,57 +37,40 @@ export default function SignUpPage() {
   async function signUp(formData: SignupFormData) {
     setMessage("");
     setLoading(true);
-
+  
     try {
       const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
+        email: formData.email.trim(),
         password: formData.password,
         options: {
           data: {
-            full_name: formData.fullName,
-            username: formData.username,
+            full_name: formData.fullName.trim(),
+            username: formData.username.trim(),
           },
         },
       });
-
+  
       if (error) {
+        console.error("SUPABASE SIGNUP ERROR:", error);
         setMessage(error.message);
         return;
       }
-
-      const user = data.user;
-
-      if (!user) {
+  
+      if (!data.user) {
         setMessage("Unable to create your adventurer account.");
         return;
       }
-
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .insert({
-          id: user.id,
-          full_name: formData.fullName,
-          username: formData.username,
-        });
-
-      if (profileError) {
-        setMessage(
-          "Your account was created, but your adventurer profile could not be created."
-        );
-        console.error(profileError);
-        return;
-      }
-
+  
       if (!data.session) {
         setMessage(
           "Account created! Please check your email to verify your account."
         );
         return;
       }
-
+  
       router.push("/adventurer");
     } catch (error) {
-      console.error(error);
+      console.error("SIGNUP ERROR:", error);
       setMessage("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
