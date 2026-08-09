@@ -159,20 +159,9 @@ return (
               @{profile.username}
             </p>
           </div>
-
-          <div className="rounded-xl border border-amber-900/30 bg-black/20 p-5 sm:col-span-2">
-            <p className="text-xs uppercase tracking-widest text-amber-100/40">
-              Adventurer ID
-            </p>
-
-            <p className="mt-2 break-all font-mono text-sm text-amber-100/60">
-              {profile.id}
-            </p>
-          </div>
-
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-8 flex justify-center">
 
           <button
             onClick={logOut}
