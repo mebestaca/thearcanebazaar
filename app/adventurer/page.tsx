@@ -23,19 +23,12 @@ export default function LoginPage() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        router.replace("/adventurer");
+        router.replace("/adventurer/profile");
       }
     });
 
     return () => subscription.unsubscribe();
   }, [router]);
-
-  async function signUp() {
-    const { error } = await supabase.auth.signUp({ email, password });
-    setMessage(
-        error ? error.message : "Account created! Check your email, then log in."
-    );
-  }
 
   async function logIn() {
     setMessage("");
@@ -52,23 +45,39 @@ export default function LoginPage() {
 
     setLoading(true);
    
-    const { error } = await supabase.auth.signInWithPassword({ 
-      email, 
-      password 
+    console.log(result.data.password);
+    try {
+    const { data, error } = await supabase.auth.signInWithPassword({ 
+      email: result.data.email, 
+      password: result.data.password,
     });
 
     if (error) {
       setMessage("Wrong email or password.");
+      return;
     }
 
+    if (!data.user) {
+      setMessage("Unable to log in. Please try again.");
+      return;
+    }
+
+    console.log("Authenticated user ID:", data.user.id);
+
+    router.replace("/adventurer/profile");
+  } catch (error) {
+    console.error("Unexpected login error:", error);
+    setMessage("Something went wrong. Please try again.");
+  } finally {
     setLoading(false);
   }
+}
 
   async function signInWithGoogle() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/adventurer`,
+        redirectTo: `${window.location.origin}/adventurer/profile`,
       },
     });
   }

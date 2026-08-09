@@ -279,7 +279,7 @@ export default function SignUpPage() {
             </p>
 
             <Link
-              href="/adventurer/login"
+              href="/adventurer"
               className="mt-2 inline-block font-medium text-amber-300 transition hover:text-amber-200"
             >
               Enter the Bazaar →
