@@ -1,129 +1,98 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useCartStore } from '@/store/cart-store';
-import { CheckoutFormData, checkoutSchema } from '@/lib/supabase/schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-
-const inputClass =
-  'w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/80';
-const errorClass = 'text-xs text-red-600 mt-1';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { checkoutSchema, CheckoutFormData } from "@/lib/supabase/schema";
+import { useCartStore } from "@/store/cart-store";
 
 export default function CheckoutForm() {
-  const items = useCartStore((s) => s.items);
-  const clearCart = useCartStore((s) => s.clearCart);
-  const router = useRouter();
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const items = useCartStore((state) => state.items);
+  const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
   });
 
-  const onSubmit = async (form: CheckoutFormData) => {
-    setSubmitError(null);
-
-    if (items.length === 0) {
-      setSubmitError('Your cart is empty.');
-      return;
-    }
+  const onSubmit = async (values: CheckoutFormData) => {
+    setSubmitting(true);
+    setServerError(null);
 
     try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          form,
-          items: items.map((i) => ({
-            productId: i.product.id,
-            name: i.product.name,
-            price: i.product.price,
-            quantity: i.quantity,
+          items: items.map((item) => ({
+            productId: item.product.id,
+            name: item.product.name,
+            price: item.product.price,
+            quantity: item.quantity,
           })),
+          form: values,
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setSubmitError(data.error ?? 'Something went wrong placing your order.');
-        return;
+        throw new Error(data.error ?? "Something went wrong");
       }
 
-      clearCart();
-      router.push(`/checkout/success?orderId=${data.orderId}`);
+      window.location.href = data.url;
     } catch (err) {
-      setSubmitError('Network error — please try again.' + err);
+      setServerError(err instanceof Error ? err.message : "Checkout failed");
+      setSubmitting(false);
     }
   };
 
+  const field = (
+    name: keyof CheckoutFormData,
+    label: string,
+    type: string = "text"
+  ) => (
+    <div>
+      <label className="mb-1 block text-sm font-medium">{label}</label>
+      <input
+        type={type}
+        {...register(name)}
+        className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+      />
+      {errors[name] && (
+        <p className="mt-1 text-sm text-red-600">{errors[name]?.message}</p>
+      )}
+    </div>
+  );
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <label className="text-sm font-medium text-gray-700">Full name</label>
-        <input {...register('fullName')} className={inputClass} placeholder="Jane Doe" />
-        {errors.fullName && <p className={errorClass}>{errors.fullName.message}</p>}
-      </div>
-
+      {field("fullName", "Full name")}
+      {field("email", "Email", "email")}
+      {field("phone", "Phone", "tel")}
+      {field("address", "Address")}
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-sm font-medium text-gray-700">Email</label>
-          <input
-            {...register('email')}
-            type="email"
-            className={inputClass}
-            placeholder="jane@example.com"
-          />
-          {errors.email && <p className={errorClass}>{errors.email.message}</p>}
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700">Phone</label>
-          <input {...register('phone')} className={inputClass} placeholder="+1 555 555 0100" />
-          {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
-        </div>
+        {field("city", "City")}
+        {field("postalCode", "Postal code")}
       </div>
+      {field("country", "Country")}
 
-      <div>
-        <label className="text-sm font-medium text-gray-700">Address</label>
-        <input {...register('address')} className={inputClass} placeholder="123 Main St" />
-        {errors.address && <p className={errorClass}>{errors.address.message}</p>}
-      </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        <div>
-          <label className="text-sm font-medium text-gray-700">City</label>
-          <input {...register('city')} className={inputClass} />
-          {errors.city && <p className={errorClass}>{errors.city.message}</p>}
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700">Postal code</label>
-          <input {...register('postalCode')} className={inputClass} />
-          {errors.postalCode && <p className={errorClass}>{errors.postalCode.message}</p>}
-        </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700">Country</label>
-          <input {...register('country')} className={inputClass} />
-          {errors.country && <p className={errorClass}>{errors.country.message}</p>}
-        </div>
-      </div>
-
-      {submitError && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
-          {submitError}
+      {serverError && (
+        <p className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+          {serverError}
         </p>
       )}
 
       <button
         type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 disabled:bg-gray-300 transition-colors"
+        disabled={submitting || items.length === 0}
+        className="w-full rounded-md bg-blue-600 px-4 py-3 font-medium text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:bg-gray-300"
       >
-        {isSubmitting ? 'Placing order…' : 'Place order'}
+        {submitting ? "Redirecting to payment…" : "Pay with Stripe"}
       </button>
     </form>
   );
