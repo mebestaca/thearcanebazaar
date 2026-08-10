@@ -70,15 +70,6 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-amber-100/70">
               <li>
                 <Link
-                  href="/ledger"
-                  className="transition hover:text-amber-300"
-                >
-                  Merchant's Ledger
-                </Link>
-              </li>
-
-              <li>
-                <Link
                   href="/shipping"
                   className="transition hover:text-amber-300"
                 >
