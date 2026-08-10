@@ -265,7 +265,7 @@ export default function SignUpPage() {
               type="button"
               onClick={handleSubmit(signUp)}
               disabled={loading || !isValid}
-              className="w-full rounded-lg bg-gradient-to-r from-amber-600 to-yellow-500 py-3 font-semibold text-[#1b1625] transition hover:from-amber-500 hover:to-yellow-400 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full rounded-lg bg-linear-to from-amber-600 to-yellow-500 py-3 font-semibold text-[#1b1625] transition hover:from-amber-500 hover:to-yellow-400 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading
                 ? "Creating Account..."
