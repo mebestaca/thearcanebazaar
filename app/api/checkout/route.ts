@@ -1,7 +1,7 @@
 import { checkoutRequestSchema } from '@/lib/supabase/schema';
 import { supabaseServer } from '@/lib/supabase/supabase-server';
+import { stripe } from '@/lib/stripe';
 import { NextRequest, NextResponse } from 'next/server';
-
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -13,6 +13,7 @@ export async function POST(req: NextRequest) {
 
   const parsed = checkoutRequestSchema.safeParse(body);
   if (!parsed.success) {
+
     return NextResponse.json(
       { error: parsed.error.issues[0]?.message ?? 'Invalid checkout data' },
       { status: 400 }
@@ -58,5 +59,34 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to save order items' }, { status: 500 });
   }
 
-  return NextResponse.json({ orderId: order.id }, { status: 201 });
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000/';
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      payment_method_types: ['card'],
+      customer_email: form.email,
+      line_items: items.map((i) => ({
+        price_data: {
+          currency: 'usd',
+          product_data: { name: i.name },
+          unit_amount: Math.round(i.price * 100),
+        },
+        quantity: i.quantity,
+      })),
+      metadata: { order_id: order.id },
+      success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/checkout/cancel`,
+    });
+
+    await supabaseServer
+      .from('orders')
+      .update({ stripe_session_id: session.id })
+      .eq('id', order.id);
+
+    return NextResponse.json({ url: session.url, orderId: order.id }, { status: 201 });
+  } catch (stripeError) {
+    console.error('Stripe session creation failed:', stripeError);
+    return NextResponse.json({ error: 'Failed to start payment' }, { status: 500 });
+  }
 }
