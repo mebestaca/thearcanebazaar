@@ -2,113 +2,84 @@ import Link from "next/link";
 
 export default function OurStoryPage() {
   return (
-    <main className="min-h-screen bg-[#1b1625] px-6 py-16 text-amber-100">
-      <div className="mx-auto max-w-5xl">
+    <main className="min-h-screen bg-[#1B1625] px-6 py-20 text-amber-100">
+      <div className="mx-auto max-w-4xl">
 
-        <section className="text-center">
-          <div className="text-6xl">📜</div>
-
-          <h1 className="mt-6 font-serif text-5xl font-bold text-amber-300">
+        {/* Header */}
+        <div className="text-center">
+          <p className="text-sm uppercase tracking-[0.3em] text-amber-400">
             Our Story
+          </p>
+
+          <h1 className="mt-4 font-serif text-5xl font-bold text-amber-300">
+            The Chronicle of the Bazaar
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-amber-100/60">
-            Every legend begins with an idea. Every adventure begins with a story.
+          <p className="mx-auto mt-6 max-w-2xl leading-8 text-amber-100/70">
+            Every marketplace has a beginning. Ours began with a passion for
+            tabletop adventures and a belief that every player deserves a place
+            to discover their next great journey.
           </p>
-        </section>
+        </div>
 
-        <section className="mt-16 rounded-2xl border border-amber-700/40 bg-[#2A2338] p-8 shadow-2xl sm:p-10">
+        {/* Story */}
+        <section className="mt-16 space-y-16">
 
-          <div className="text-center">
-            <span className="text-5xl">🏰</span>
+          {/* Chapter 1 */}
+          <div>
+            <p className="text-sm uppercase tracking-widest text-amber-400">
+              Chapter I
+            </p>
 
-            <h2 className="mt-5 font-serif text-3xl font-bold text-amber-300">
-              Where the Bazaar Began
+            <h2 className="mt-2 font-serif text-3xl text-amber-300">
+              The First Spark
             </h2>
-          </div>
 
-          <div className="mx-auto mt-8 max-w-3xl space-y-6 text-lg leading-8 text-amber-100/70">
-
-            <p>
-              Every memorable tabletop adventure starts with curiosity.
-              A forgotten map, a mysterious relic, or a handful of dice can
-              become the beginning of an unforgettable journey.
-            </p>
-
-            <p>
-              The Arcane Bazaar was created from that same spirit of discovery.
-              We wanted to build more than an online marketplace—we wanted a
-              place where tabletop enthusiasts could explore products,
-              discover new resources, and find inspiration for their next
-              campaign.
-            </p>
-
-            <p>
-              Inspired by the bustling magical marketplaces found throughout
-              fantasy worlds, the Bazaar is designed to feel like a destination
-              where every shelf hides another treasure and every visit offers
-              something new to uncover.
-            </p>
-
-            <p>
-              Whether you're a first-time adventurer searching for your first
-              set of dice or a seasoned Game Master expanding an ever-growing
-              collection, we believe every item has the potential to become
-              part of someone's next great story.
-            </p>
-
-            <p>
-              Our journey has only just begun, and with every adventurer who
-              visits the Bazaar, another chapter is written.
-            </p>
-
-          </div>
-        </section>
-
-        <section className="mt-10 grid gap-6 md:grid-cols-3">
-
-          <div className="rounded-2xl border border-amber-700/30 bg-[#2A2338] p-6 text-center">
-            <div className="text-5xl">🎲</div>
-
-            <h3 className="mt-4 font-serif text-2xl text-amber-300">
-              Discover
-            </h3>
-
-            <p className="mt-3 text-sm leading-7 text-amber-100/60">
-              Explore carefully selected tabletop products and resources that
-              inspire unforgettable adventures.
+            <p className="mt-4 leading-8 text-amber-100/70">
+              The Arcane Bazaar began with a simple idea: create a place where
+              tabletop enthusiasts could discover games, accessories, and
+              inspiration in one fantasy-inspired marketplace.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-amber-700/30 bg-[#2A2338] p-6 text-center">
-            <div className="text-5xl">🛡️</div>
+          {/* Chapter 2 */}
+          <div>
+            <p className="text-sm uppercase tracking-widest text-amber-400">
+              Chapter II
+            </p>
 
-            <h3 className="mt-4 font-serif text-2xl text-amber-300">
-              Create
-            </h3>
+            <h2 className="mt-2 font-serif text-3xl text-amber-300">
+              Building the Bazaar
+            </h2>
 
-            <p className="mt-3 text-sm leading-7 text-amber-100/60">
-              Build worlds, craft stories, and prepare campaigns that bring
-              players together around the table.
+            <p className="mt-4 leading-8 text-amber-100/70">
+              Inspired by magical marketplaces found in fantasy worlds, the
+              Bazaar became more than a store. It became a place where every
+              visitor could discover something worthy of their next adventure.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-amber-700/30 bg-[#2A2338] p-6 text-center">
-            <div className="text-5xl">✨</div>
+          {/* Chapter 3 */}
+          <div>
+            <p className="text-sm uppercase tracking-widest text-amber-400">
+              Chapter III
+            </p>
 
-            <h3 className="mt-4 font-serif text-2xl text-amber-300">
-              Adventure
-            </h3>
+            <h2 className="mt-2 font-serif text-3xl text-amber-300">
+              The Journey Continues
+            </h2>
 
-            <p className="mt-3 text-sm leading-7 text-amber-100/60">
-              Every purchase, every game, and every campaign becomes another
-              chapter in a legendary adventure.
+            <p className="mt-4 leading-8 text-amber-100/70">
+              Every adventurer who visits the Bazaar becomes part of its story.
+              As our collection grows, so does the community that inspires us to
+              keep exploring and sharing new adventures.
             </p>
           </div>
 
         </section>
 
-        <section className="mt-12 rounded-2xl border border-amber-700/30 bg-[#2A2338] p-10 text-center">
+        {/* Closing */}
+        <section className="mt-16 rounded-2xl border border-amber-700/30 bg-[#2A2338] p-10 text-center">
 
           <p className="font-serif text-3xl italic text-amber-300">
             "Every legend begins with a single step through the Bazaar."

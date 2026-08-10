@@ -20,32 +20,18 @@ export default function AboutPage() {
 
         <section className="mt-16 rounded-2xl border border-amber-700/40 bg-[#2A2338] p-8 shadow-2xl sm:p-10">
           <div className="text-center">
-            <span className="text-4xl">📜</span>
+            <span className="text-4xl">🎯</span>
 
             <h2 className="mt-4 font-serif text-3xl font-bold text-amber-300">
-              Our Story
+              Our Mission
             </h2>
           </div>
 
           <div className="mx-auto mt-8 max-w-3xl space-y-5 text-base leading-8 text-amber-100/70">
             <p>
-              Every great adventure begins with a little curiosity. A map
-              waiting to be explored, a forgotten relic, a new game, or a
-              tabletop story waiting to unfold.
-            </p>
-
-            <p>
-              The Arcane Bazaar was created as a place where those discoveries
-              could come together. Inspired by the mysterious marketplaces of
-              fantasy worlds, our Bazaar brings tabletop products and resources
-              together for adventurers who love to play, create, and explore.
-            </p>
-
-            <p>
-              Whether you are a seasoned game master searching for your next
-              campaign essential or a new adventurer looking for something to
-              begin your journey, the Bazaar is meant to be a place of
-              discovery.
+            The Arcane Bazaar was created from a passion for tabletop adventures and a love for fantasy worlds. 
+            Our goal is to provide a welcoming marketplace where players can discover games, accessories, and resources 
+            that inspire memorable campaigns. Every visitor becomes part of an ever-growing community of adventurers.
             </p>
           </div>
         </section>
@@ -99,7 +85,7 @@ export default function AboutPage() {
             "Every legend begins with a single step through the Bazaar."
           </p>
         </section>
-        
+
         <section className="mt-12 text-center">
           <h2 className="font-serif text-3xl font-bold text-amber-300">
             Your Adventure Awaits
