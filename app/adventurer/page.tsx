@@ -45,7 +45,6 @@ export default function LoginPage() {
 
     setLoading(true);
    
-    console.log(result.data.password);
     try {
     const { data, error } = await supabase.auth.signInWithPassword({ 
       email: result.data.email, 
@@ -61,8 +60,6 @@ export default function LoginPage() {
       setMessage("Unable to log in. Please try again.");
       return;
     }
-
-    console.log("Authenticated user ID:", data.user.id);
 
     router.replace("/adventurer/profile");
   } catch (error) {
