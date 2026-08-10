@@ -43,7 +43,6 @@ export const checkoutSchema = z.object({
 
 export type CheckoutFormData = z.infer<typeof checkoutSchema>;
 
-// Validated on the server inside /api/checkout as well — never trust the client.
 export const checkoutRequestSchema = z.object({
   form: checkoutSchema,
   items: z
@@ -59,3 +58,4 @@ export const checkoutRequestSchema = z.object({
 });
 
 export type CheckoutRequest = z.infer<typeof checkoutRequestSchema>;
+
