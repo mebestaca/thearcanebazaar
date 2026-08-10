@@ -1,15 +1,12 @@
 import { z } from 'zod';
 
-/* LOGIN SCHEMA */
 export const loginSchema = z.object({
-  email: z.string().email("Enter a valid email address"),
+  email: z.email("Enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
 
-
-/* SIGN UP SCHEMA */
 export const signupSchema = z.object({
   fullName: z.string().min(5, "Full name must be at least 5 characters"),
 
@@ -30,7 +27,6 @@ export const signupSchema = z.object({
 export type SignupFormData = z.infer<typeof signupSchema>;
 
 
-/* CHECKOUT SCHEMA */
 export const checkoutSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   email: z.string().email('Enter a valid email address'),
