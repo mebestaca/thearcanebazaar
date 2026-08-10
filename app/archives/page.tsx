@@ -5,7 +5,6 @@ export default function OurStoryPage() {
     <main className="min-h-screen bg-[#1B1625] px-6 py-20 text-amber-100">
       <div className="mx-auto max-w-4xl">
 
-        {/* Header */}
         <div className="text-center">
           <p className="text-sm uppercase tracking-[0.3em] text-amber-400">
             Our Story
@@ -22,10 +21,8 @@ export default function OurStoryPage() {
           </p>
         </div>
 
-        {/* Story */}
         <section className="mt-16 space-y-16">
 
-          {/* Chapter 1 */}
           <div>
             <p className="text-sm uppercase tracking-widest text-amber-400">
               Chapter I
@@ -42,7 +39,6 @@ export default function OurStoryPage() {
             </p>
           </div>
 
-          {/* Chapter 2 */}
           <div>
             <p className="text-sm uppercase tracking-widest text-amber-400">
               Chapter II
@@ -59,7 +55,6 @@ export default function OurStoryPage() {
             </p>
           </div>
 
-          {/* Chapter 3 */}
           <div>
             <p className="text-sm uppercase tracking-widest text-amber-400">
               Chapter III
@@ -78,7 +73,6 @@ export default function OurStoryPage() {
 
         </section>
 
-        {/* Closing */}
         <section className="mt-16 rounded-2xl border border-amber-700/30 bg-[#2A2338] p-10 text-center">
 
           <p className="font-serif text-3xl italic text-amber-300">
