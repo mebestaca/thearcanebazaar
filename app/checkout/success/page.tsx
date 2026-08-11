@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ClearCart from './ClearCart';
 
 export default async function CheckoutSuccessPage({
   searchParams,
@@ -9,7 +10,7 @@ export default async function CheckoutSuccessPage({
 
   return (
     <main className="min-h-screen bg-[#1b1625] text-amber-100">
-
+      <ClearCart/>
       {/* Ambient Magic */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-20 h-96 w-96 -translate-x-1/2 rounded-full bg-amber-400/10 blur-3xl" />
