@@ -8,10 +8,11 @@ import {
   CheckoutFormData,
 } from "@/lib/supabase/schema";
 import { useCartStore } from "@/store/cart-store";
+import { useAuthStore } from "@/store/auth-store";
 
 export default function CheckoutForm() {
   const items = useCartStore((state) => state.items);
-
+  const profileId = useAuthStore((s) => s.profile?.id) ?? null;
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -40,7 +41,7 @@ export default function CheckoutForm() {
             price: item.product.price,
             quantity: item.quantity,
           })),
-          form: values,
+          form: values, profileId
         }),
       });
 
