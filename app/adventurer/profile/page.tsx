@@ -91,7 +91,7 @@ async function logOut() {
 
         <button
           onClick={() => router.replace("/adventurer")}
-          className="mt-8 rounded-lg bg-gradient-to-r from-amber-700 to-amber-500 px-6 py-3 font-semibold text-white transition hover:opacity-90"
+          className="mt-8 rounded-lg bg-linear-to-r from-amber-700 to-amber-500 px-6 py-3 font-semibold text-white transition hover:opacity-90"
         >
           Return to the Bazaar
         </button>
