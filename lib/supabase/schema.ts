@@ -51,6 +51,7 @@ export const checkoutRequestSchema = z.object({
       })
     )
     .min(1, 'Cart is empty'),
+  profileId: z.string().uuid().nullable().optional(),
 });
 
 export type CheckoutRequest = z.infer<typeof checkoutRequestSchema>;
