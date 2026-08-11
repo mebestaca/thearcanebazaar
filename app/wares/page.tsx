@@ -1,26 +1,11 @@
-'use client'
+'use client';
+
 import ProductCard from "@/components/ProductCard";
-import type { Category, Product } from '@/types';
+import type { Category, Product } from "@/types";
 import { supabase } from "@/lib/supabase/supabase";
 import { useEffect, useMemo, useState } from "react";
 
-
-// async function getProducts(): Promise<Product[]> {
-
-//   const { data, error } = await supabase
-//     .from('products')
-//     .select('*')
-//     .order('created_at', { ascending: false });
-
-//   if (error) {
-//     console.error('Error fetching products:', error.message);
-//     return [];
-//   }
-//   return (data ?? []) as Product[];
-// }
-
 export default function WaresPage() {
-
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -45,12 +30,6 @@ export default function WaresPage() {
           .select("*")
           .order("name", { ascending: true }),
       ]);
-
-      console.log("Products:", productsResult.data);
-      console.log("Products error:", productsResult.error);
-
-      console.log("Categories:", categoriesResult.data);
-      console.log("Category error:", categoriesResult.error);
 
       if (productsResult.error) {
         console.error(
@@ -115,221 +94,320 @@ export default function WaresPage() {
 
       case "featured":
       default:
-        // Products are already ordered by created_at
-        // from Supabase.
         break;
     }
 
     return result;
   }, [products, search, category, sort]);
 
+  const hasFilters =
+    search !== "" ||
+    category !== "All" ||
+    sort !== "featured";
+
   return (
     <main className="min-h-screen bg-[#1b1625] text-amber-100">
 
       {/* Hero */}
+      <section className="relative overflow-hidden border-b border-amber-900/30">
+        <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-400/5 blur-3xl" />
 
-      <section className="border-b border-amber-900/30">
-        <div className="mx-auto max-w-7xl px-6 py-16">
+        <div className="relative mx-auto max-w-7xl px-6 py-20">
+          <div className="max-w-3xl">
+            <div className="mb-5 flex items-center gap-3 text-sm uppercase tracking-[0.3em] text-amber-400/80">
+              <span>✦</span>
+              <span>The Merchant's Marketplace</span>
+              <span>✦</span>
+            </div>
 
-          <p className="uppercase tracking-[0.35em] text-amber-300">
-            Merchant's Marketplace
-          </p>
+            <h1 className="font-serif text-5xl font-bold tracking-tight text-amber-200 sm:text-6xl">
+              Browse the Wares
+            </h1>
 
-          <h1 className="mt-4 text-5xl font-bold text-amber-200">
-            Browse Wares
-          </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-amber-100/60">
+              Step into the Bazaar and discover curious dice,
+              legendary miniatures, mysterious board games, and
+              other treasures gathered from merchants across the realms.
+            </p>
 
-          <p className="mt-5 max-w-3xl text-lg text-amber-100/70">
-            From enchanted dice to legendary miniatures,
-            discover everything required for your next adventure.
-          </p>
-
+            <div className="mt-8 flex items-center gap-3 text-sm text-amber-100/50">
+              <span className="text-amber-400">⚔</span>
+              <span>
+                Every adventurer deserves the right equipment.
+              </span>
+            </div>
+          </div>
         </div>
-
       </section>
 
-      {/* Layout */}
+      {/* Main Content */}
+      <section className="mx-auto max-w-7xl px-6 py-12">
+        <div className="grid gap-10 lg:grid-cols-[260px_1fr]">
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-[280px_1fr]">
+          {/* Filter Sidebar */}
+          <aside className="h-fit rounded-xl border border-amber-900/30 bg-[#211a2c] shadow-xl shadow-black/10">
 
-        {/* Sidebar */}
+            {/* Sidebar Header */}
+            <div className="border-b border-amber-900/30 px-6 py-5">
+              <div className="flex items-center gap-3">
+                <span className="text-xl text-amber-400">
+                  🧙
+                </span>
 
-        <aside className="space-y-8 rounded-xl border border-amber-900/30 bg-[#241d31] p-6 h-fit">
+                <div>
+                  <h2 className="font-serif text-lg font-semibold text-amber-200">
+                    Merchant's Desk
+                  </h2>
 
-          <div>
-
-            <label className="mb-2 block text-sm font-medium text-amber-300">
-              Search
-            </label>
-
-            <input
-              id="search"
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search wares..."
-              className="w-full rounded-lg border border-amber-900/30 bg-[#1b1625] px-4 py-2 outline-none focus:border-amber-400"
-            />
-
-          </div>
-
-          <div>
-
-            <label className="mb-2 block text-sm font-medium text-amber-300">
-              Category
-            </label>
-
-            {/* <select
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg border border-amber-900/30 bg-[#1b1625] px-4 py-2"
-            >
-              <option>All</option>
-              <option>Dice</option>
-              <option>Miniatures</option>
-              <option>Books</option>
-              <option>Terrain</option>
-              <option>Accessories</option>
-            </select> */}
-
-            <select
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-lg border border-amber-900/30 bg-[#1b1625] px-4 py-2"
-            >
-              <option value="All">All</option>
-
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-
-          </div>
-
-          <div>
-
-            <label className="mb-2 block text-sm font-medium text-amber-300">
-              Sort By
-            </label>
-
-            <select
-              id="sort"
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="w-full rounded-lg border border-amber-900/30 bg-[#1b1625] px-4 py-2"
-            >
-              <option value="featured">Featured</option>
-              <option value="price-low">
-                Price: Low to High
-              </option>
-              <option value="price-high">
-                Price: High to Low
-              </option>
-              <option value="name">
-                Name
-              </option>
-            </select>
-
-          </div>
-
-          {(search !== "" ||
-            category !== "All" ||
-            sort !== "featured") && (
-            <button
-              onClick={() => {
-                setSearch("");
-                setCategory("All");
-                setSort("featured");
-              }}
-              className="w-full rounded-lg border border-amber-700 px-4 py-2 text-sm text-amber-300 transition hover:border-amber-300 hover:text-amber-200"
-            >
-              Clear Filters
-            </button>
-          )}
-
-        </aside>
-
-        {/* Products */}
-
-         <section>
-
-          {/* Results Header */}
-          <div className="mb-8 flex items-center justify-between">
-
-            <h2 className="text-2xl font-bold text-amber-300">
-              {loading
-                ? "Loading..."
-                : `${filteredProducts.length} Wares Found`}
-            </h2>
-
-          </div>
-
-          {/* Loading */}
-          {loading && (
-            <div className="py-20 text-center text-amber-100/60">
-              Loading wares...
+                  <p className="text-xs text-amber-100/40">
+                    Search the Bazaar
+                  </p>
+                </div>
+              </div>
             </div>
-          )}
 
-          {/* No Results */}
-          {!loading && filteredProducts.length === 0 && (
-            <div className="rounded-xl border border-amber-900/30 bg-[#241d31] px-6 py-16 text-center">
-              <h3 className="text-xl font-semibold text-amber-200">
-                No wares found
-              </h3>
+            <div className="space-y-7 p-6">
 
-              <p className="mt-2 text-amber-100/60">
-                Try changing your search or category.
-              </p>
+              {/* Search */}
+              <div>
+                <label
+                  htmlFor="search"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80"
+                >
+                  Search Wares
+                </label>
+
+                <div className="relative">
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-amber-100/30">
+                    🔎
+                  </span>
+
+                  <input
+                    id="search"
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Find a treasure..."
+                    className="w-full rounded-lg border border-amber-900/40 bg-[#17121f] py-2.5 pl-10 pr-3 text-sm text-amber-100 placeholder:text-amber-100/25 outline-none transition focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/20"
+                  />
+                </div>
+              </div>
+
+              {/* Category */}
+              <div>
+                <label
+                  htmlFor="category"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80"
+                >
+                  Category
+                </label>
+
+                <select
+                  id="category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full cursor-pointer rounded-lg border border-amber-900/40 bg-[#17121f] px-3 py-2.5 text-sm text-amber-100 outline-none transition focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/20"
+                >
+                  <option value="All">All Wares</option>
+
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sort */}
+              <div>
+                <label
+                  htmlFor="sort"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80"
+                >
+                  Arrange By
+                </label>
+
+                <select
+                  id="sort"
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  className="w-full cursor-pointer rounded-lg border border-amber-900/40 bg-[#17121f] px-3 py-2.5 text-sm text-amber-100 outline-none transition focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/20"
+                >
+                  <option value="featured">Featured</option>
+                  <option value="price-low">
+                    Price: Low to High
+                  </option>
+                  <option value="price-high">
+                    Price: High to Low
+                  </option>
+                  <option value="name">Name</option>
+                </select>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-amber-900/20" />
+
+              {/* Current Selection */}
+              <div>
+                <p className="mb-3 text-xs uppercase tracking-wider text-amber-100/30">
+                  Current Selection
+                </p>
+
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-amber-100/50">
+                      Category
+                    </span>
+
+                    <span className="max-w-30 truncate text-right text-amber-200">
+                      {category === "All"
+                        ? "All"
+                        : categories.find(
+                            (cat) => cat.id === category
+                          )?.name ?? "Selected"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-amber-100/50">
+                      Results
+                    </span>
+
+                    <span className="text-amber-200">
+                      {loading
+                        ? "..."
+                        : filteredProducts.length}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Clear Filters */}
+              {hasFilters && (
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setCategory("All");
+                    setSort("featured");
+                  }}
+                  className="w-full rounded-lg border border-amber-700/60 px-4 py-2.5 text-sm font-medium text-amber-300 transition hover:border-amber-400 hover:bg-amber-400/5 hover:text-amber-200"
+                >
+                  ✦ Clear Selection
+                </button>
+              )}
             </div>
-          )}
+          </aside>
 
-          {/* Product Grid */}
-          {!loading && filteredProducts.length > 0 && (
-            <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                />
-              ))}
+          {/* Products */}
+          <section>
+
+            {/* Results Header */}
+            <div className="mb-8 flex flex-col gap-3 border-b border-amber-900/20 pb-6 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="mb-1 text-xs uppercase tracking-[0.25em] text-amber-400/60">
+                  The Collection
+                </p>
+
+                <h2 className="font-serif text-3xl font-bold text-amber-200">
+                  {loading
+                    ? "Consulting the Merchants..."
+                    : `${filteredProducts.length} Wares Found`}
+                </h2>
+              </div>
+
+              {!loading && (
+                <p className="text-sm text-amber-100/40">
+                  Choose wisely, adventurer.
+                </p>
+              )}
             </div>
-          )}
 
-          {/* Pagination */}
-          {!loading && filteredProducts.length > 0 && (
-            <div className="mt-12 flex justify-center gap-3">
+            {/* Loading */}
+            {loading && (
+              <div className="flex min-h-100 flex-col items-center justify-center rounded-xl border border-amber-900/20 bg-[#211a2c]">
+                <div className="mb-5 animate-pulse text-4xl">
+                  ✦
+                </div>
 
-              <button
-                disabled
-                className="rounded-lg border border-amber-700 px-4 py-2 text-amber-100/40"
-              >
-                Previous
-              </button>
+                <p className="font-serif text-lg text-amber-200">
+                  Consulting the merchants...
+                </p>
 
-              <button className="rounded-lg bg-amber-300 px-4 py-2 font-semibold text-[#1b1625]">
-                1
-              </button>
+                <p className="mt-2 text-sm text-amber-100/40">
+                  The shelves are being prepared.
+                </p>
+              </div>
+            )}
 
-              <button className="rounded-lg border border-amber-700 px-4 py-2 hover:border-amber-300">
-                2
-              </button>
+            {/* No Results */}
+            {!loading && filteredProducts.length === 0 && (
+              <div className="flex min-h-100 flex-col items-center justify-center rounded-xl border border-amber-900/30 bg-[#211a2c] px-6 text-center">
+                <div className="mb-5 text-5xl">
+                  🕯️
+                </div>
 
-              <button className="rounded-lg border border-amber-700 px-4 py-2 hover:border-amber-300">
-                Next
-              </button>
+                <h3 className="font-serif text-2xl font-semibold text-amber-200">
+                  The shelves are bare
+                </h3>
 
-            </div>
-          )}
+                <p className="mt-3 max-w-md text-amber-100/50">
+                  No wares match your current search.
+                  Perhaps another path through the Bazaar
+                  will reveal what you seek.
+                </p>
 
-        </section>
+                <button
+                  onClick={() => {
+                    setSearch("");
+                    setCategory("All");
+                    setSort("featured");
+                  }}
+                  className="mt-6 rounded-lg bg-amber-300 px-5 py-2.5 text-sm font-semibold text-[#1b1625] transition hover:bg-amber-200"
+                >
+                  Return to All Wares
+                </button>
+              </div>
+            )}
 
+            {/* Product Grid */}
+            {!loading && filteredProducts.length > 0 && (
+              <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Pagination */}
+            {!loading && filteredProducts.length > 0 && (
+              <div className="mt-14 flex items-center justify-center gap-2">
+                <button
+                  disabled
+                  className="rounded-lg border border-amber-900/30 px-4 py-2 text-sm text-amber-100/20"
+                >
+                  ← Previous
+                </button>
+
+                <button className="rounded-lg bg-amber-300 px-4 py-2 text-sm font-bold text-[#1b1625] shadow-lg shadow-amber-900/10">
+                  1
+                </button>
+
+                <button className="rounded-lg border border-amber-900/40 px-4 py-2 text-sm text-amber-100/60 transition hover:border-amber-400/60 hover:text-amber-200">
+                  2
+                </button>
+
+                <button className="rounded-lg border border-amber-900/40 px-4 py-2 text-sm text-amber-100/60 transition hover:border-amber-400/60 hover:text-amber-200">
+                  Next →
+                </button>
+              </div>
+            )}
+          </section>
+        </div>
       </section>
-
     </main>
   );
 }
+
