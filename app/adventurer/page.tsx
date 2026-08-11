@@ -1,5 +1,5 @@
 "use client";
-
+import { useAuthStore } from "@/store/auth-store";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,23 +12,17 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
   const [password, setPassword] = useState("");
-
+  const userId = useAuthStore((s) => s.userId);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   const emailValidation = loginSchema.shape.email.safeParse(email);
 
   useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        router.replace("/adventurer/profile");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [router]);
+    if (userId) {
+      router.replace("/adventurer/profile");
+    }
+  }, [userId, router]);
 
   async function logIn() {
     setMessage("");
