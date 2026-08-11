@@ -12,7 +12,8 @@ export default function WaresPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("featured");
-
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 9;  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -49,11 +50,12 @@ export default function WaresPage() {
         setCategories((categoriesResult.data ?? []) as Category[]);
       }
 
+      setPage(1);
       setLoading(false);
     }
 
     getData();
-  }, []);
+  }, [search, category, sort]);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -104,6 +106,12 @@ export default function WaresPage() {
     search !== "" ||
     category !== "All" ||
     sort !== "featured";
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
+  const paginatedProducts = filteredProducts.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE
+  );
 
   return (
     <main className="min-h-screen bg-[#1b1625] text-amber-100">
@@ -372,11 +380,8 @@ export default function WaresPage() {
             {/* Product Grid */}
             {!loading && filteredProducts.length > 0 && (
               <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                  />
+                {paginatedProducts.map((product) => (
+                  <ProductCard key={product.id} product={product}/>
                 ))}
               </div>
             )}
@@ -385,21 +390,32 @@ export default function WaresPage() {
             {!loading && filteredProducts.length > 0 && (
               <div className="mt-14 flex items-center justify-center gap-2">
                 <button
-                  disabled
-                  className="rounded-lg border border-amber-900/30 px-4 py-2 text-sm text-amber-100/20"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="rounded-lg border border-amber-900/40 px-4 py-2 text-sm text-amber-100/60 transition hover:border-amber-400/60 hover:text-amber-200 disabled:cursor-not-allowed disabled:border-amber-900/30 disabled:text-amber-100/20 disabled:hover:border-amber-900/30 disabled:hover:text-amber-100/20"
                 >
                   ← Previous
                 </button>
 
-                <button className="rounded-lg bg-amber-300 px-4 py-2 text-sm font-bold text-[#1b1625] shadow-lg shadow-amber-900/10">
-                  1
-                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                  <button
+                    key={pageNum}
+                    onClick={() => setPage(pageNum)}
+                    className={
+                      pageNum === page
+                        ? "rounded-lg bg-amber-300 px-4 py-2 text-sm font-bold text-[#1b1625] shadow-lg shadow-amber-900/10"
+                        : "rounded-lg border border-amber-900/40 px-4 py-2 text-sm text-amber-100/60 transition hover:border-amber-400/60 hover:text-amber-200"
+                    }
+                  >
+                    {pageNum}
+                  </button>
+                ))}
 
-                <button className="rounded-lg border border-amber-900/40 px-4 py-2 text-sm text-amber-100/60 transition hover:border-amber-400/60 hover:text-amber-200">
-                  2
-                </button>
-
-                <button className="rounded-lg border border-amber-900/40 px-4 py-2 text-sm text-amber-100/60 transition hover:border-amber-400/60 hover:text-amber-200">
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="rounded-lg border border-amber-900/40 px-4 py-2 text-sm text-amber-100/60 transition hover:border-amber-400/60 hover:text-amber-200 disabled:cursor-not-allowed disabled:border-amber-900/30 disabled:text-amber-100/20 disabled:hover:border-amber-900/30 disabled:hover:text-amber-100/20"
+                >
                   Next →
                 </button>
               </div>
