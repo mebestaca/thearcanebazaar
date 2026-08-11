@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { form, items } = parsed.data;
+  const { form, items, profileId  } = parsed.data;
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   const { data: order, error: orderError } = await supabaseServer
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
       country: form.country,
       total,
       status: 'pending',
+      profile_id: profileId ?? null
     })
     .select('id')
     .single();
