@@ -24,3 +24,15 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Arcane Bazaar — browser autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #fef3c7 !important;
+  -webkit-box-shadow: 0 0 0 1000px #17121f inset !important;
+  box-shadow: 0 0 0 1000px #17121f inset !important;
+  caret-color: #fef3c7;
+  transition: background-color 9999s ease-out 0s;
+}
