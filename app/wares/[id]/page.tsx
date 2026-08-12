@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Product } from '@/types';
 import { supabase } from '@/lib/supabase/supabase';
 import AddToCartSection from '@/components/AddToCartSection';
+import Image from 'next/image';
 
 export const revalidate = 0;
 
@@ -71,7 +72,7 @@ export default async function ProductPage({
 
                 {product.image_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <Image
                     src={product.image_url}
                     alt={product.name}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
