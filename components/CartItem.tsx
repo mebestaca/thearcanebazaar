@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import type { CartItem as CartItemType } from '@/types';
 import { useCartStore } from '@/store/cart-store';
+import Image from 'next/image';
 
 export default function CartItem({
   item,
@@ -55,7 +56,7 @@ export default function CartItem({
 
           {product.image_url ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={product.image_url}
               alt={product.name}
               className="
