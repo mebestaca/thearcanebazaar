@@ -5,6 +5,7 @@ import type { CSSProperties } from 'react';
 import type { Product } from '@/types';
 import { useCartStore } from '@/store/cart-store';
 import { useState } from 'react';
+import Image from 'next/image';
 
 const glowColors = [
   'rgba(251, 191, 36, 0.30)',  // Gold
@@ -81,7 +82,7 @@ export default function ProductCard({
 
           {product.image_url ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={product.image_url}
               alt={product.name}
               className="
