@@ -59,6 +59,8 @@ export default function CartItem({
             <Image
               src={product.image_url}
               alt={product.name}
+              width={78}   
+              height={78}
               className="
                 h-full
                 w-full
