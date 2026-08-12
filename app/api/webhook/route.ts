@@ -31,37 +31,45 @@ export async function POST(req: NextRequest) {
     const orderId = session.metadata?.order_id;
 
     if (orderId) {
-      const { error: statusError } = await supabaseServer
-        .from('orders')
-        .update({ status: 'paid' })
-        .eq('id', orderId);
+        const { data: existingOrder } = await supabaseServer
+            .from('orders')
+            .select('status')
+            .eq('id', orderId)
+            .single();
 
-      if (statusError) {
-        console.error('Failed to mark order paid:', statusError.message);
-      }
-
-      const { data: orderItems, error: itemsFetchError } = await supabaseServer
-        .from('order_items')
-        .select('product_id, quantity')
-        .eq('order_id', orderId);
-
-      if (itemsFetchError) {
-        console.error('Failed to fetch order items for stock update:', itemsFetchError.message);
-      } else {
-        for (const item of orderItems ?? []) {
-          const { error: stockError } = await supabaseServer.rpc('decrement_stock', {
-            p_product_id: item.product_id,
-            p_quantity: item.quantity,
-          });
-
-          if (stockError) {
-            console.error(
-              `Failed to decrement stock for product ${item.product_id}:`,
-              stockError.message
-            );
-          }
+        if (existingOrder?.status === 'paid') {
+            return NextResponse.json({ received: true, skipped: 'already paid' });
         }
-      }
+
+        const { error: statusError } = await supabaseServer
+            .from('orders')
+            .update({ status: 'paid' })
+            .eq('id', orderId);    
+
+
+        if (statusError) {
+            console.error('Failed to mark order paid:', statusError.message);
+        }
+
+        const { data: orderItems, error: itemsFetchError } = await supabaseServer
+            .from('order_items')
+            .select('product_id, quantity')
+            .eq('order_id', orderId);
+
+        if (itemsFetchError) {
+            console.error('Failed to fetch order items for stock update:', itemsFetchError.message);
+        } else {
+            for (const item of orderItems ?? []) {
+                const { error: stockError } = await supabaseServer.rpc('decrement_stock', {
+                    p_product_id: item.product_id,
+                    p_quantity: item.quantity,
+            });
+
+            if (stockError) {
+                console.error(`Failed to decrement stock for product ${item.product_id}:`,stockError.message);
+                }
+            }
+        }
     }
   }
 
