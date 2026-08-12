@@ -132,7 +132,7 @@ export default function MerchantsPage() {
 
           <Link
             href="/"
-            className="mt-6 inline-block rounded-lg bg-gradient-to-r from-amber-700 to-amber-500 px-7 py-3 font-semibold text-white transition hover:from-amber-600 hover:to-amber-400"
+            className="mt-6 inline-block rounded-lg bg-linear-to-r from-amber-700 to-amber-500 px-7 py-3 font-semibold text-white transition hover:from-amber-600 hover:to-amber-400"
           >
             Explore the Bazaar →
           </Link>
