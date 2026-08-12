@@ -18,3 +18,21 @@ export interface Category {
   id: string;
   name: string;
 };
+
+export interface Order {
+  id: string;
+  full_name: string;
+  total: number;
+  status: string;
+  created_at: string;
+  order_items: OrderItem[];
+}
+
+export interface OrderItem {
+  id: string;
+  product_id: string;
+  product_name: string;
+  quantity: number;
+  price: number;
+  products: { image_url: string | null } | null;
+}
