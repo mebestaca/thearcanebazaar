@@ -1,11 +1,14 @@
-'use client';
+"use client";
 
 import ProductCard from "@/components/ProductCard";
 import type { Category, Product } from "@/types";
 import { supabase } from "@/lib/supabase/supabase";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function WaresPage() {
+  const searchParams = useSearchParams();
+  const initialCategory = searchParams.get("category") || "All";
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -15,10 +18,10 @@ export default function WaresPage() {
   const [minAge, setMinAge] = useState("All");
   const [inStockOnly, setInStockOnly] = useState(false);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState(initialCategory);
   const [sort, setSort] = useState("featured");
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 9;  
+  const PAGE_SIZE = 9;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -38,10 +41,7 @@ export default function WaresPage() {
       ]);
 
       if (productsResult.error) {
-        console.error(
-          "Error fetching products:",
-          productsResult.error.message
-        );
+        console.error("Error fetching products:", productsResult.error.message);
       } else {
         setProducts((productsResult.data ?? []) as Product[]);
       }
@@ -49,7 +49,7 @@ export default function WaresPage() {
       if (categoriesResult.error) {
         console.error(
           "Error fetching categories:",
-          categoriesResult.error.message
+          categoriesResult.error.message,
         );
       } else {
         setCategories((categoriesResult.data ?? []) as Category[]);
@@ -78,9 +78,7 @@ export default function WaresPage() {
 
     // Category
     if (category !== "All") {
-      result = result.filter(
-        (product) => product.category_id === category
-      );
+      result = result.filter((product) => product.category_id === category);
     }
 
     // Sort
@@ -94,9 +92,7 @@ export default function WaresPage() {
         break;
 
       case "name":
-        result.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
+        result.sort((a, b) => a.name.localeCompare(b.name));
         break;
 
       case "featured":
@@ -114,7 +110,11 @@ export default function WaresPage() {
       const n = Number(playerCount);
       if (!Number.isNaN(n)) {
         result = result.filter((product) => {
-          if (product.player_count_min == null || product.player_count_max == null) return false;
+          if (
+            product.player_count_min == null ||
+            product.player_count_max == null
+          )
+            return false;
           return n >= product.player_count_min && n <= product.player_count_max;
         });
       }
@@ -137,7 +137,8 @@ export default function WaresPage() {
     if (minAge !== "All") {
       const n = Number(minAge);
       result = result.filter(
-        (product) => product.age_recommendation != null && product.age_recommendation <= n
+        (product) =>
+          product.age_recommendation != null && product.age_recommendation <= n,
       );
     }
 
@@ -147,7 +148,17 @@ export default function WaresPage() {
     }
 
     return result;
-  }, [products, search, category, sort, publisher, playerCount, playTime, minAge, inStockOnly]);
+  }, [
+    products,
+    search,
+    category,
+    sort,
+    publisher,
+    playerCount,
+    playTime,
+    minAge,
+    inStockOnly,
+  ]);
 
   const publishers = useMemo(() => {
     const unique = new Set(products.map((p) => p.publisher).filter(Boolean));
@@ -164,15 +175,17 @@ export default function WaresPage() {
     minAge !== "All" ||
     inStockOnly;
 
-  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredProducts.length / PAGE_SIZE),
+  );
   const paginatedProducts = filteredProducts.slice(
     (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE
+    page * PAGE_SIZE,
   );
 
   return (
     <main className="min-h-screen bg-[#1b1625] text-amber-100">
-
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-amber-900/30">
         <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-400/5 blur-3xl" />
@@ -190,16 +203,14 @@ export default function WaresPage() {
             </h1>
 
             <p className="mt-6 max-w-2xl text-lg leading-8 text-amber-100/60">
-              Step into the Bazaar and discover curious dice,
-              legendary miniatures, mysterious board games, and
-              other treasures gathered from merchants across the realms.
+              Step into the Bazaar and discover curious dice, legendary
+              miniatures, mysterious board games, and other treasures gathered
+              from merchants across the realms.
             </p>
 
             <div className="mt-8 flex items-center gap-3 text-sm text-amber-100/50">
               <span className="text-amber-400">⚔</span>
-              <span>
-                Every adventurer deserves the right equipment.
-              </span>
+              <span>Every adventurer deserves the right equipment.</span>
             </div>
           </div>
         </div>
@@ -208,31 +219,24 @@ export default function WaresPage() {
       {/* Main Content */}
       <section className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid gap-10 lg:grid-cols-[260px_1fr]">
-
           {/* Filter Sidebar */}
           <aside className="h-fit rounded-xl border border-amber-900/30 bg-[#211a2c] shadow-xl shadow-black/10">
-
             {/* Sidebar Header */}
             <div className="border-b border-amber-900/30 px-6 py-5">
               <div className="flex items-center gap-3">
-                <span className="text-xl text-amber-400">
-                  🧙
-                </span>
+                <span className="text-xl text-amber-400">🧙</span>
 
                 <div>
                   <h2 className="font-serif text-lg font-semibold text-amber-200">
                     Merchant's Desk
                   </h2>
 
-                  <p className="text-xs text-amber-100/40">
-                    Search the Bazaar
-                  </p>
+                  <p className="text-xs text-amber-100/40">Search the Bazaar</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-7 p-6">
-
               {/* Search */}
               <div>
                 <label
@@ -299,19 +303,18 @@ export default function WaresPage() {
                   className="w-full cursor-pointer rounded-lg border border-amber-900/40 bg-[#17121f] px-3 py-2.5 text-sm text-amber-100 outline-none transition focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/20"
                 >
                   <option value="featured">Featured</option>
-                  <option value="price-low">
-                    Price: Low to High
-                  </option>
-                  <option value="price-high">
-                    Price: High to Low
-                  </option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
                   <option value="name">Name</option>
                 </select>
               </div>
 
               {/* Publisher */}
               <div>
-                <label htmlFor="publisher" className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80">
+                <label
+                  htmlFor="publisher"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80"
+                >
                   Publisher
                 </label>
                 <select
@@ -322,14 +325,19 @@ export default function WaresPage() {
                 >
                   <option value="All">All Publishers</option>
                   {publishers.map((pub) => (
-                    <option key={pub} value={pub}>{pub}</option>
+                    <option key={pub} value={pub}>
+                      {pub}
+                    </option>
                   ))}
                 </select>
               </div>
 
               {/* Player Count */}
               <div>
-                <label htmlFor="playerCount" className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80">
+                <label
+                  htmlFor="playerCount"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80"
+                >
                   Number of Players
                 </label>
                 <input
@@ -345,7 +353,10 @@ export default function WaresPage() {
 
               {/* Play Time */}
               <div>
-                <label htmlFor="playTime" className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80">
+                <label
+                  htmlFor="playTime"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80"
+                >
                   Play Time
                 </label>
                 <select
@@ -364,7 +375,10 @@ export default function WaresPage() {
 
               {/* Age Recommendation */}
               <div>
-                <label htmlFor="minAge" className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80">
+                <label
+                  htmlFor="minAge"
+                  className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80"
+                >
                   Age
                 </label>
                 <select
@@ -392,11 +406,13 @@ export default function WaresPage() {
                   onChange={(e) => setInStockOnly(e.target.checked)}
                   className="h-4 w-4 rounded border-amber-900/40 bg-[#17121f] text-amber-400 focus:ring-amber-400/20"
                 />
-                <label htmlFor="inStockOnly" className="text-sm text-amber-100/70">
+                <label
+                  htmlFor="inStockOnly"
+                  className="text-sm text-amber-100/70"
+                >
                   In stock only
                 </label>
               </div>
-
 
               {/* Divider */}
               <div className="border-t border-amber-900/20" />
@@ -409,28 +425,21 @@ export default function WaresPage() {
 
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between">
-                    <span className="text-amber-100/50">
-                      Category
-                    </span>
+                    <span className="text-amber-100/50">Category</span>
 
                     <span className="max-w-30 truncate text-right text-amber-200">
                       {category === "All"
                         ? "All"
-                        : categories.find(
-                            (cat) => cat.id === category
-                          )?.name ?? "Selected"}
+                        : (categories.find((cat) => cat.id === category)
+                            ?.name ?? "Selected")}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-amber-100/50">
-                      Results
-                    </span>
+                    <span className="text-amber-100/50">Results</span>
 
                     <span className="text-amber-200">
-                      {loading
-                        ? "..."
-                        : filteredProducts.length}
+                      {loading ? "..." : filteredProducts.length}
                     </span>
                   </div>
                 </div>
@@ -459,7 +468,6 @@ export default function WaresPage() {
 
           {/* Products */}
           <section>
-
             {/* Results Header */}
             <div className="mb-8 flex flex-col gap-3 border-b border-amber-900/20 pb-6 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -484,9 +492,7 @@ export default function WaresPage() {
             {/* Loading */}
             {loading && (
               <div className="flex min-h-100 flex-col items-center justify-center rounded-xl border border-amber-900/20 bg-[#211a2c]">
-                <div className="mb-5 animate-pulse text-4xl">
-                  ✦
-                </div>
+                <div className="mb-5 animate-pulse text-4xl">✦</div>
 
                 <p className="font-serif text-lg text-amber-200">
                   Consulting the merchants...
@@ -501,18 +507,15 @@ export default function WaresPage() {
             {/* No Results */}
             {!loading && filteredProducts.length === 0 && (
               <div className="flex min-h-100 flex-col items-center justify-center rounded-xl border border-amber-900/30 bg-[#211a2c] px-6 text-center">
-                <div className="mb-5 text-5xl">
-                  🕯️
-                </div>
+                <div className="mb-5 text-5xl">🕯️</div>
 
                 <h3 className="font-serif text-2xl font-semibold text-amber-200">
                   The shelves are bare
                 </h3>
 
                 <p className="mt-3 max-w-md text-amber-100/50">
-                  No wares match your current search.
-                  Perhaps another path through the Bazaar
-                  will reveal what you seek.
+                  No wares match your current search. Perhaps another path
+                  through the Bazaar will reveal what you seek.
                 </p>
 
                 <button
@@ -532,7 +535,7 @@ export default function WaresPage() {
             {!loading && filteredProducts.length > 0 && (
               <div className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
                 {paginatedProducts.map((product) => (
-                  <ProductCard key={product.id} product={product}/>
+                  <ProductCard key={product.id} product={product} />
                 ))}
               </div>
             )}
@@ -548,19 +551,21 @@ export default function WaresPage() {
                   ← Previous
                 </button>
 
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                  <button
-                    key={pageNum}
-                    onClick={() => setPage(pageNum)}
-                    className={
-                      pageNum === page
-                        ? "rounded-lg bg-amber-300 px-4 py-2 text-sm font-bold text-[#1b1625] shadow-lg shadow-amber-900/10"
-                        : "rounded-lg border border-amber-900/40 px-4 py-2 text-sm text-amber-100/60 transition hover:border-amber-400/60 hover:text-amber-200"
-                    }
-                  >
-                    {pageNum}
-                  </button>
-                ))}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (pageNum) => (
+                    <button
+                      key={pageNum}
+                      onClick={() => setPage(pageNum)}
+                      className={
+                        pageNum === page
+                          ? "rounded-lg bg-amber-300 px-4 py-2 text-sm font-bold text-[#1b1625] shadow-lg shadow-amber-900/10"
+                          : "rounded-lg border border-amber-900/40 px-4 py-2 text-sm text-amber-100/60 transition hover:border-amber-400/60 hover:text-amber-200"
+                      }
+                    >
+                      {pageNum}
+                    </button>
+                  ),
+                )}
 
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
@@ -577,4 +582,3 @@ export default function WaresPage() {
     </main>
   );
 }
-
