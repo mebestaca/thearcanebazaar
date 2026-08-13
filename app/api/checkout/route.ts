@@ -21,7 +21,12 @@ export async function POST(req: NextRequest) {
   }
 
   const { form, items, profileId  } = parsed.data;
-  const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+  const diceRoll = Math.floor(Math.random() * 20) + 1;
+  const discountPercent = diceRoll; // 1 roll = 1% off, 20 = 20% off
+
+  const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const total = Math.round(subtotal * (1 - discountPercent / 100) * 100) / 100;
 
   const { data: order, error: orderError } = await supabaseServer
     .from('orders')
@@ -33,7 +38,9 @@ export async function POST(req: NextRequest) {
       city: form.city,
       postal_code: form.postalCode,
       country: form.country,
+      subtotal,
       total,
+      dice_roll: diceRoll,
       status: 'pending',
       profile_id: profileId ?? null
     })
@@ -63,6 +70,13 @@ export async function POST(req: NextRequest) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000/';
 
   try {
+
+    const coupon = await stripe.coupons.create({
+      percent_off: discountPercent,
+      duration: 'once',
+      name: `d20 Roll: ${diceRoll}`,
+    });
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
@@ -75,6 +89,7 @@ export async function POST(req: NextRequest) {
         },
         quantity: i.quantity,
       })),
+      discounts: [{ coupon: coupon.id }],
       metadata: { order_id: order.id },
       success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/checkout/cancel`,
