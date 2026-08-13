@@ -96,7 +96,7 @@ export default function HomePage() {
 
             <Link
               href="/wares"
-              className="rounded-lg bg-amber-300 px-6 py-3 font-semibold text-[#1b1625] transition hover:bg-amber-200"
+              className="rounded-lg bg-amber-300 px-6 py-3 font-semibold text-[#1b1625] shadow-[0_0_20px_rgba(251,191,36,0.4)] transition-all duration-300 hover:bg-amber-200 hover:shadow-[0_0_45px_rgba(251,191,36,0.7)]"
             >
               Browse Wares
             </Link>
