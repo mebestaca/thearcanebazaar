@@ -180,7 +180,7 @@ export default function HomePage() {
 
       {/* Latest Archives */}
 
-      <section className="mx-auto max-w-6xl px-6 py-16">
+      {/* <section className="mx-auto max-w-6xl px-6 py-16">
         <div className="mb-10 flex items-center justify-between">
           <h2 className="text-3xl font-bold text-amber-300">Latest Archives</h2>
 
@@ -218,7 +218,7 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Newsletter */}
 
