@@ -90,8 +90,8 @@ export async function POST(req: NextRequest) {
         quantity: i.quantity,
       })),
       discounts: [{ coupon: coupon.id }],
-      metadata: { order_id: order.id },
-      success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      metadata: { order_id: order.id , dice_roll: String(diceRoll) },
+      success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}&orderId=${order.id}`,
       cancel_url: `${siteUrl}/checkout/cancel`,
     });
 
