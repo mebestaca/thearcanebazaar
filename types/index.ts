@@ -33,6 +33,8 @@ export interface Order {
   status: string;
   created_at: string;
   order_items: OrderItem[];
+  subtotal: number;
+  dice_roll: number;
 }
 
 export interface OrderItem {
