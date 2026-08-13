@@ -150,6 +150,17 @@ export default function ProductCard({
             </div>
           )}
 
+          {/* Category Badge */}
+          {product.category?.name && (
+            <div
+              className={`absolute left-3 rounded-full border border-amber-700/50 bg-[#17121f]/90 px-3 py-1 text-xs font-semibold text-amber-300 backdrop-blur-sm ${
+                outOfStock ? 'top-11' : 'top-3'
+              }`}
+            >
+              {product.category.name}
+            </div>
+          )}
+
           {/* Magical Rune */}
           <div
             className="
