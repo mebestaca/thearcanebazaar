@@ -79,6 +79,7 @@ export default function LedgerPage() {
               <div
                 key={order.id}
                 className="
+                    group
                     rounded-xl
                     border border-amber-900/30
                     bg-[#211a2c]
@@ -99,11 +100,50 @@ export default function LedgerPage() {
                     </p>
                   </div>
 
-                  <div className="text-right">
-                    <p className="font-semibold text-amber-200">
-                      ${order.total.toFixed(2)}
+                  <div
+                    className="
+                      min-w-47.5
+                      rounded-lg
+                      border border-amber-900/30
+                      bg-[#17121f]/70
+                      px-4 py-3
+                      text-right
+                      transition-all duration-300
+                      group-hover:border-amber-400/30
+                      group-hover:shadow-[0_0_15px_rgba(251,191,36,0.08)]
+                    "
+                  >
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-amber-100/30">
+                      Order Value
                     </p>
-                    <p className="mt-1 text-xs uppercase tracking-wider text-amber-100/50">
+
+                    <p className="mt-1 text-sm text-amber-100/60">
+                      ${Number(order.subtotal).toFixed(2)}
+                    </p>
+
+                    <div className="my-2 border-t border-amber-900/20" />
+
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-xs text-amber-100/40">
+                        Fortune's Favor
+                      </span>
+
+                      <span className="font-semibold text-emerald-300">
+                        🎲 −{order.dice_roll}%
+                      </span>
+                    </div>
+
+                    <div className="mt-2 flex items-center justify-between gap-4">
+                      <span className="font-serif text-sm text-amber-200">
+                        Price Paid
+                      </span>
+
+                      <span className="font-serif text-lg font-bold text-amber-300">
+                        ${Number(order.total).toFixed(2)}
+                      </span>
+                    </div>
+
+                    <p className="mt-2 text-[10px] uppercase tracking-wider text-amber-100/30">
                       {order.status}
                     </p>
                   </div>
