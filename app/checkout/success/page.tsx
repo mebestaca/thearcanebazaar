@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import ClearCart from './ClearCart';
+import { supabaseServer } from '@/lib/supabase/supabase-server';
 
 export default async function CheckoutSuccessPage({
   searchParams,
@@ -7,6 +8,24 @@ export default async function CheckoutSuccessPage({
   searchParams: Promise<{ orderId?: string }>;
 }) {
   const { orderId } = await searchParams;
+
+  let diceRoll: number | null = null;
+  let subtotal: number | null = null;
+  let total: number | null = null;
+
+  if (orderId) {
+    const { data } = await supabaseServer
+      .from('orders')
+      .select('dice_roll, subtotal, total')
+      .eq('id', orderId)
+      .single();
+
+    if (data) {
+      diceRoll = data.dice_roll;
+      subtotal = data.subtotal;
+      total = data.total;
+    }
+  }
 
   return (
     <main className="min-h-screen bg-[#1b1625] text-amber-100">
@@ -18,6 +37,22 @@ export default async function CheckoutSuccessPage({
         <div className="absolute right-1/4 top-1/3 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl" />
       </div>
 
+      {diceRoll !== null && (
+        <div className="mx-auto mt-8 max-w-md rounded-xl border border-amber-900/30 bg-[#17121f] px-5 py-4 text-center">
+          <p className="text-xs uppercase tracking-[0.2em] text-amber-100/30">
+            Fortune's Roll
+          </p>
+          <p className="mt-2 font-serif text-3xl font-bold text-amber-300">
+            You rolled a {diceRoll}
+          </p>
+          <p className="mt-2 text-sm text-amber-100/60">
+            The dice favored you with a {diceRoll}% discount —
+            {subtotal !== null && total !== null && (
+              <> ${subtotal.toFixed(2)} reduced to <span className="font-semibold text-amber-200">${total.toFixed(2)}</span>.</>
+            )}
+          </p>
+        </div>
+      )}
 
       <div className="relative mx-auto flex min-h-[70vh] max-w-2xl items-center justify-center px-6 py-16">
 
