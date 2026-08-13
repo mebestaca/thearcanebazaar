@@ -9,6 +9,11 @@ export default function WaresPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
+  const [publisher, setPublisher] = useState("All");
+  const [playerCount, setPlayerCount] = useState("");
+  const [playTime, setPlayTime] = useState("All");
+  const [minAge, setMinAge] = useState("All");
+  const [inStockOnly, setInStockOnly] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("featured");
@@ -99,13 +104,65 @@ export default function WaresPage() {
         break;
     }
 
+    // Publisher
+    if (publisher !== "All") {
+      result = result.filter((product) => product.publisher === publisher);
+    }
+
+    // Player count — product must support this many players
+    if (playerCount.trim() !== "") {
+      const n = Number(playerCount);
+      if (!Number.isNaN(n)) {
+        result = result.filter((product) => {
+          if (product.player_count_min == null || product.player_count_max == null) return false;
+          return n >= product.player_count_min && n <= product.player_count_max;
+        });
+      }
+    }
+
+    // Play time
+    if (playTime !== "All") {
+      result = result.filter((product) => {
+        const t = product.play_time_minutes;
+        if (t == null) return false;
+        if (playTime === "under30") return t < 30;
+        if (playTime === "30to60") return t >= 30 && t <= 60;
+        if (playTime === "60to90") return t > 60 && t <= 90;
+        if (playTime === "90plus") return t > 90;
+        return true;
+      });
+    }
+
+    // Minimum age
+    if (minAge !== "All") {
+      const n = Number(minAge);
+      result = result.filter(
+        (product) => product.age_recommendation != null && product.age_recommendation <= n
+      );
+    }
+
+    // In stock only
+    if (inStockOnly) {
+      result = result.filter((product) => product.stock > 0);
+    }
+
     return result;
-  }, [products, search, category, sort]);
+  }, [products, search, category, sort, publisher, playerCount, playTime, minAge, inStockOnly]);
+
+  const publishers = useMemo(() => {
+    const unique = new Set(products.map((p) => p.publisher).filter(Boolean));
+    return Array.from(unique) as string[];
+  }, [products]);
 
   const hasFilters =
     search !== "" ||
     category !== "All" ||
-    sort !== "featured";
+    sort !== "featured" ||
+    publisher !== "All" ||
+    playerCount !== "" ||
+    playTime !== "All" ||
+    minAge !== "All" ||
+    inStockOnly;
 
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
   const paginatedProducts = filteredProducts.slice(
@@ -252,6 +309,95 @@ export default function WaresPage() {
                 </select>
               </div>
 
+              {/* Publisher */}
+              <div>
+                <label htmlFor="publisher" className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80">
+                  Publisher
+                </label>
+                <select
+                  id="publisher"
+                  value={publisher}
+                  onChange={(e) => setPublisher(e.target.value)}
+                  className="w-full cursor-pointer rounded-lg border border-amber-900/40 bg-[#17121f] px-3 py-2.5 text-sm text-amber-100 outline-none transition focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/20"
+                >
+                  <option value="All">All Publishers</option>
+                  {publishers.map((pub) => (
+                    <option key={pub} value={pub}>{pub}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Player Count */}
+              <div>
+                <label htmlFor="playerCount" className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80">
+                  Number of Players
+                </label>
+                <input
+                  id="playerCount"
+                  type="number"
+                  min={1}
+                  value={playerCount}
+                  onChange={(e) => setPlayerCount(e.target.value)}
+                  placeholder="e.g. 4"
+                  className="w-full rounded-lg border border-amber-900/40 bg-[#17121f] px-3 py-2.5 text-sm text-amber-100 placeholder:text-amber-100/25 outline-none transition focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/20"
+                />
+              </div>
+
+              {/* Play Time */}
+              <div>
+                <label htmlFor="playTime" className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80">
+                  Play Time
+                </label>
+                <select
+                  id="playTime"
+                  value={playTime}
+                  onChange={(e) => setPlayTime(e.target.value)}
+                  className="w-full cursor-pointer rounded-lg border border-amber-900/40 bg-[#17121f] px-3 py-2.5 text-sm text-amber-100 outline-none transition focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/20"
+                >
+                  <option value="All">Any Length</option>
+                  <option value="under30">Under 30 min</option>
+                  <option value="30to60">30–60 min</option>
+                  <option value="60to90">60–90 min</option>
+                  <option value="90plus">90+ min</option>
+                </select>
+              </div>
+
+              {/* Age Recommendation */}
+              <div>
+                <label htmlFor="minAge" className="mb-2 block text-xs font-semibold uppercase tracking-wider text-amber-400/80">
+                  Age
+                </label>
+                <select
+                  id="minAge"
+                  value={minAge}
+                  onChange={(e) => setMinAge(e.target.value)}
+                  className="w-full cursor-pointer rounded-lg border border-amber-900/40 bg-[#17121f] px-3 py-2.5 text-sm text-amber-100 outline-none transition focus:border-amber-400/70 focus:ring-1 focus:ring-amber-400/20"
+                >
+                  <option value="All">All Ages</option>
+                  <option value="6">6+</option>
+                  <option value="8">8+</option>
+                  <option value="10">10+</option>
+                  <option value="12">12+</option>
+                  <option value="16">16+</option>
+                  <option value="18">18+</option>
+                </select>
+              </div>
+
+              {/* In Stock Only */}
+              <div className="flex items-center gap-2">
+                <input
+                  id="inStockOnly"
+                  type="checkbox"
+                  checked={inStockOnly}
+                  onChange={(e) => setInStockOnly(e.target.checked)}
+                  className="h-4 w-4 rounded border-amber-900/40 bg-[#17121f] text-amber-400 focus:ring-amber-400/20"
+                />
+                <label htmlFor="inStockOnly" className="text-sm text-amber-100/70">
+                  In stock only
+                </label>
+              </div>
+
+
               {/* Divider */}
               <div className="border-t border-amber-900/20" />
 
@@ -297,6 +443,11 @@ export default function WaresPage() {
                     setSearch("");
                     setCategory("All");
                     setSort("featured");
+                    setPublisher("All");
+                    setPlayerCount("");
+                    setPlayTime("All");
+                    setMinAge("All");
+                    setInStockOnly(false);
                   }}
                   className="w-full rounded-lg border border-amber-700/60 px-4 py-2.5 text-sm font-medium text-amber-300 transition hover:border-amber-400 hover:bg-amber-400/5 hover:text-amber-200"
                 >
