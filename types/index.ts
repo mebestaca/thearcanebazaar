@@ -13,6 +13,7 @@ export interface Product {
   play_time_minutes: number | null;
   age_recommendation: number | null;
   expansion_of: string | null;
+  category: { name: string } | null;
 }
 
 export interface CartItem {
