@@ -141,7 +141,7 @@ export default function CartItem({
 
         <button
           onClick={() =>
-            updateQuantity(product.id, quantity - 1)
+            updateQuantity(product.id ,Math.max(1, quantity - 1))            
           }
           className="
             px-3
@@ -174,7 +174,7 @@ export default function CartItem({
 
         <button
           onClick={() =>
-            updateQuantity(product.id, quantity + 1)
+            updateQuantity(product.id,  Math.min(product.stock, quantity + 1))
           }
           className="
             px-3
