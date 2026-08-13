@@ -8,9 +8,9 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 const glowColors = [
-  'rgba(251, 191, 36, 0.30)',  // Gold
-  'rgba(168, 85, 247, 0.30)',  // Arcane Purple
-  'rgba(59, 130, 246, 0.30)',  // Sapphire Blue
+  'rgba(251, 191, 36, 0.35)',  // Gold
+  'rgba(168, 85, 247, 0.35)',  // Arcane Purple
+  'rgba(59, 130, 246, 0.35)',  // Sapphire Blue
   'rgba(34, 197, 94, 0.25)',   // Emerald Green
   'rgba(239, 68, 68, 0.25)',   // Crimson
 ];
@@ -33,131 +33,132 @@ export default function ProductCard({
   } as CSSProperties;
 
   return (
-    <div
-      style={glowStyle}
-      className="
-        group
-        relative
-        flex
-        flex-col
-        overflow-hidden
-        rounded-xl
-        border
-        border-amber-900/30
-        bg-[#211a2c]
-        shadow-lg
-        shadow-black/20
-        transition-all
-        duration-300
-        hover:-translate-y-2
-        hover:border-(--glow-color)
-        hover:shadow-[0_0_35px_var(--glow-color)]
-      "
-    >
-      {/* Magical Glow Behind Card */}
       <div
+        style={glowStyle}
         className="
-          pointer-events-none
-          absolute
-          -inset-1
-          -z-10
+          group
+          relative
+          flex
+          flex-col
+          overflow-hidden
           rounded-xl
-          opacity-0
-          blur-xl
-          transition-opacity
-          duration-500
-          group-hover:opacity-100
+          border
+          border-amber-900/30
+          bg-[#211a2c]
+          shadow-lg
+          shadow-black/20
+          transition-all
+          duration-300
+          hover:-translate-y-2
+          hover:bg-[#271f34]
+          hover:border-(--glow-color)
+          hover:shadow-[0_0_10px_var(--glow-color),0_0_35px_var(--glow-color),0_0_70px_var(--glow-color)]
         "
-        style={{
-          background: glowColor,
-        }}
-      />
-
-      {/* Product Image */}
-      <Link
-        href={`/wares/${product.id}`}
-        className="block"
       >
-        <div className="relative h-56 w-full overflow-hidden bg-[#17121f]">
+        {/* Magical Glow Behind Card */}
+        <div
+          className="
+            pointer-events-none
+            absolute
+            -inset-1
+            -z-10
+            rounded-xl
+            opacity-0
+            blur-xl
+            transition-opacity
+            duration-500
+            group-hover:opacity-100
+          "
+          style={{
+            background: glowColor,
+          }}
+        />
 
-          {product.image_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <Image
-              src={product.image_url}
-              alt={product.name}
-              width={78}   
-              height={78}
+        {/* Product Image */}
+        <Link
+          href={`/wares/${product.id}`}
+          className="block"
+        >
+          <div className="relative h-56 w-full overflow-hidden bg-[#17121f]">
+
+            {product.image_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <Image
+                src={product.image_url}
+                alt={product.name}
+                width={78}   
+                height={78}
+                className="
+                  h-full
+                  w-full
+                  object-cover
+                  transition-all
+                  duration-500
+                  group-hover:scale-105
+                  group-hover:brightness-110
+                "
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-sm text-amber-100/30">
+                <div className="text-center">
+                  <div className="mb-2 text-3xl">
+                    ✦
+                  </div>
+
+                  <p>No image available</p>
+                </div>
+              </div>
+            )}
+
+            {/* Magical Image Aura */}
+            <div
               className="
-                h-full
-                w-full
-                object-cover
-                transition-all
+                pointer-events-none
+                absolute
+                inset-0
+                opacity-0
+                transition-opacity
                 duration-500
-                group-hover:scale-105
-                group-hover:brightness-110
+                group-hover:opacity-100
+              "
+              style={{
+                background: `radial-gradient(
+                  circle at center,
+                  ${glowColor},
+                  transparent 65%
+                )`,
+              }}
+            />
+
+            {/* Bottom Image Fade */}
+            <div
+              className="
+                pointer-events-none
+                absolute
+                inset-x-0
+                bottom-0
+                h-24
+                bg-linear-to-t
+                from-[#211a2c]
+                to-transparent
               "
             />
-          ) : (
-            <div className="flex h-full items-center justify-center text-sm text-amber-100/30">
-              <div className="text-center">
-                <div className="mb-2 text-3xl">
-                  ✦
-                </div>
 
-                <p>No image available</p>
+            {/* Out of Stock */}
+            {outOfStock && (
+              <div className="absolute left-3 top-3 rounded-full border border-red-900/40 bg-[#17121f]/90 px-3 py-1 text-xs font-semibold text-red-300 backdrop-blur-sm">
+                Out of Stock
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Magical Image Aura */}
-          <div
-            className="
-              pointer-events-none
-              absolute
-              inset-0
-              opacity-0
-              transition-opacity
-              duration-500
-              group-hover:opacity-100
-            "
-            style={{
-              background: `radial-gradient(
-                circle at center,
-                ${glowColor},
-                transparent 65%
-              )`,
-            }}
-          />
-
-          {/* Bottom Image Fade */}
-          <div
-            className="
-              pointer-events-none
-              absolute
-              inset-x-0
-              bottom-0
-              h-24
-              bg-linear-to-t
-              from-[#211a2c]
-              to-transparent
-            "
-          />
-
-          {/* Out of Stock */}
-          {outOfStock && (
-            <div className="absolute left-3 top-3 rounded-full border border-red-900/40 bg-[#17121f]/90 px-3 py-1 text-xs font-semibold text-red-300 backdrop-blur-sm">
-              Out of Stock
-            </div>
-          )}
-
-          {/* Category Badge */}
-          {product.category?.name && (
-            <div
-              className={`
-                absolute
-                left-3
-                rounded-full
-                border
+            {/* Category Badge */}
+            {product.category?.name && (
+              <div
+                className={`
+                  absolute
+                  left-3
+                  rounded-full
+                  border
                 border-amber-700/50
                 bg-[#17121f]/90
                 px-3
