@@ -28,7 +28,7 @@ export default function WaresPage() {
       const [productsResult, categoriesResult] = await Promise.all([
         supabase
           .from("products")
-          .select("*")
+          .select("*, category (name)")
           .order("created_at", { ascending: false }),
 
         supabase
