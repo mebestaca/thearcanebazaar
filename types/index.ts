@@ -6,7 +6,13 @@ export interface Product {
   image_url: string;
   stock: number;
   created_at?: string;
-  category_id: string
+  category_id: string;
+  publisher: string | null;
+  player_count_min: number | null;
+  player_count_max: number | null;
+  play_time_minutes: number | null;
+  age_recommendation: number | null;
+  expansion_of: string | null;
 }
 
 export interface CartItem {
