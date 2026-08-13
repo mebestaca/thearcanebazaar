@@ -27,170 +27,269 @@ export default async function CheckoutSuccessPage({
     }
   }
 
+  const savings =
+    subtotal !== null && total !== null
+      ? Number(subtotal) - Number(total)
+      : null;
+
   return (
-    <main className="min-h-screen bg-[#1b1625] text-amber-100">
-      <ClearCart/>
-      {/* Ambient Magic */}
+    <main className="min-h-screen bg-[#1b1625] px-6 py-16 text-amber-100">
+      <ClearCart />
+
+      {/* Ambient glow */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-20 h-96 w-96 -translate-x-1/2 rounded-full bg-amber-400/10 blur-3xl" />
-        <div className="absolute left-1/4 top-1/2 h-64 w-64 rounded-full bg-purple-500/5 blur-3xl" />
-        <div className="absolute right-1/4 top-1/3 h-64 w-64 rounded-full bg-blue-500/5 blur-3xl" />
+        <div className="absolute left-1/2 top-20 h-96 w-96 -translate-x-1/2 rounded-full bg-amber-400/4 blur-3xl" />
+
+        <div className="absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-purple-500/3 blur-3xl" />
       </div>
 
-      {diceRoll !== null && (
-        <div className="mx-auto mt-8 max-w-md rounded-xl border border-amber-900/30 bg-[#17121f] px-5 py-4 text-center">
-          <p className="text-xs uppercase tracking-[0.2em] text-amber-100/30">
-            Fortune's Roll
+
+      <div className="relative mx-auto max-w-3xl">
+
+        {/* HEADER */}
+        <div className="mb-8">
+          <p className="text-xs uppercase tracking-[0.25em] text-amber-100/30">
+            The Arcane Bazaar
           </p>
-          <p className="mt-2 font-serif text-3xl font-bold text-amber-300">
-            You rolled a {diceRoll}
-          </p>
-          <p className="mt-2 text-sm text-amber-100/60">
-            The dice favored you with a {diceRoll}% discount —
-            {subtotal !== null && total !== null && (
-              <> ${subtotal.toFixed(2)} reduced to <span className="font-semibold text-amber-200">${total.toFixed(2)}</span>.</>
-            )}
-          </p>
-        </div>
-      )}
 
-      <div className="relative mx-auto flex min-h-[70vh] max-w-2xl items-center justify-center px-6 py-16">
+          <div className="mt-2 flex items-center gap-3">
+            <h1 className="font-serif text-3xl font-bold text-amber-300">
+              Transaction Recorded
+            </h1>
 
-        <div className="w-full text-center">
-
-          {/* Magical Emblem */}
-          <div className="relative mx-auto mb-8 flex h-24 w-24 items-center justify-center">
-
-            {/* Outer Glow */}
-            <div className="absolute inset-0 animate-pulse rounded-full bg-amber-400/10 blur-xl" />
-
-            {/* Circle */}
-            <div
+            <span
               className="
-                relative
-                flex
-                h-20
-                w-20
-                items-center
-                justify-center
                 rounded-full
-                border
-                border-amber-400/40
-                bg-[#211a2c]
-                text-4xl
-                shadow-[0_0_30px_rgba(251,191,36,0.2)]
+                border border-emerald-400/20
+              bg-emerald-400/6
+                px-2.5
+                py-1
+                text-[10px]
+                font-medium
+                uppercase
+                tracking-wider
+                text-emerald-300/80
               "
             >
-              ✦
+              Complete
+            </span>
+          </div>
+
+          <p className="mt-2 text-sm text-amber-100/40">
+            Your purchase has been entered into the merchant&apos;s ledger.
+          </p>
+        </div>
+
+
+        {/* LEDGER CARD */}
+        <div
+           className="
+            overflow-hidden
+            rounded-xl
+            border border-amber-900/30
+            bg-[#211a2c]
+            px-6 py-5
+            transition-all
+            duration-300
+            ease-out
+            hover:border-amber-400/50
+            hover:shadow-[0_0_20px_rgba(251,191,36,0.15)]
+          "
+        >
+
+          {/* Top bar */}
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+              border-b
+              border-amber-900/20
+              bg-[#17121f]/30
+              px-6
+              py-4
+            "
+          >
+
+            <div className="flex items-center gap-3">
+              <span className="text-amber-400/50">
+                ✦
+              </span>
+              <span className="text-xs uppercase tracking-[0.2em] text-amber-100/40">
+                Merchant&apos;s Ledger
+              </span>
             </div>
+            <span className="font-mono text-xs text-amber-100/20">
+              ENTRY
+            </span>
 
           </div>
 
 
-          {/* Success Card */}
+          {/*  ORDER INFORMATION*/}
+          <div className="px-6 py-7 sm:px-8">
+
+            {orderId && (
+              <div className="mb-8">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-amber-100/25">
+                  Ledger Reference
+                </p>
+                <p className="mt-2 break-all font-mono text-sm text-amber-300/80">
+                  {orderId}
+                </p>
+              </div>
+            )}
+
+
+            {/* FORTUNE */}
+            {diceRoll !== null && (
+              <div
+                className="
+                  mb-6
+                  rounded-lg
+                  border border-amber-400/20
+                  bg-amber-400/[0.035]
+                  px-5
+                  py-5
+                  transition-all
+                  duration-300
+                  hover:border-amber-400/35
+                  hover:bg-amber-400/5
+                  hover:shadow-[0_0_20px_rgba(251,191,36,0.08)]
+                "
+              >
+
+                <div className="flex items-center justify-between gap-6">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-amber-100/30">
+                      Fortune&apos;s Discount
+                    </p>
+
+                    <p className="mt-2 text-sm text-amber-100/50">
+                      The dice have spoken in your favor.
+                    </p>
+                  </div>
+
+
+                  <div className="text-right">
+                    <p className="font-serif text-3xl font-bold text-amber-300">
+                      {diceRoll}%
+                    </p>
+                    <p className="mt-1 text-[10px] uppercase tracking-wider text-amber-100/25">
+                      Roll: {diceRoll}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+
+            {/* PRICE BREAKDOWN */}
+
+            <div>
+              <div className="mb-4 flex items-center gap-3">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-amber-100/25">
+                  Settlement
+                </span>
+                <div className="h-px flex-1 bg-amber-900/20" />
+              </div>
+
+
+              <div className="space-y-4">
+                {subtotal !== null && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-amber-100/45">
+                      Order Subtotal
+                    </span>
+
+                    <span className="font-mono text-sm text-amber-100/70">
+                      ${Number(subtotal).toFixed(2)}
+                    </span>
+                  </div>
+                )}
+
+
+                {savings !== null && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-amber-100/45">
+                      Fortune&apos;s Discount
+                    </span>
+
+                    <span className="font-mono text-sm text-emerald-300/80">
+                      −${savings.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+
+
+                <div className="border-t border-amber-900/20 pt-4">
+                  <div className="flex items-end justify-between">
+                    <span className="font-serif text-base text-amber-200">
+                      Total Paid
+                    </span>
+
+                    {total !== null && (
+                      <span className="font-serif text-2xl font-bold text-amber-300">
+                        ${Number(total).toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          {/* CONFIRMATION */}
           <div
             className="
-              overflow-hidden
-              rounded-2xl
-              border
-              border-amber-900/30
-              bg-[#211a2c]
-              shadow-[0_0_50px_rgba(251,191,36,0.08)]
+              border-t
+              border-amber-900/20
+              bg-[#17121f]/30
+              px-6
+              py-6
+              sm:px-8
             "
           >
 
-            {/* Top Decoration */}
-            <div className="border-b border-amber-900/20 px-6 py-4">
-              <div className="flex items-center justify-center gap-3 text-xs uppercase tracking-[0.3em] text-amber-400/60">
-                <span>✦</span>
-                <span>Quest Complete</span>
-                <span>✦</span>
-              </div>
-            </div>
-
-
-            <div className="px-6 py-12 sm:px-10">
-
-              {/* Heading */}
-              <h1 className="font-serif text-4xl font-bold text-amber-200 sm:text-5xl">
-                Order Placed!
-              </h1>
-
-              <p className="mt-5 text-lg leading-relaxed text-amber-100/60">
-                Your treasures have been secured.
-                <br />
-                The merchant guild is preparing your order.
-              </p>
-
-
-              {/* Order Reference */}
-              {orderId && (
-                <div
-                  className="
-                    mx-auto
-                    mt-8
-                    max-w-md
-                    rounded-xl
-                    border
-                    border-amber-900/30
-                    bg-[#17121f]
-                    px-5
-                    py-4
-                  "
-                >
-
-                  <p className="text-xs uppercase tracking-[0.2em] text-amber-100/30">
-                    Order Reference
-                  </p>
-
-                  <p className="mt-2 break-all font-mono text-sm text-amber-300">
-                    {orderId}
-                  </p>
-
-                </div>
-              )}
-
-
-              {/* Message */}
-              <div className="mx-auto mt-8 max-w-md">
-
-                <p className="text-sm leading-6 text-amber-100/40">
-                  Thank you for shopping at The Arcane Bazaar.
-                  Your order has been recorded in our merchant&apos;s
-                  ledger and will begin its journey shortly.
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-medium text-amber-100/70">
+                  Your treasures are secured.
                 </p>
-
+                <p className="mt-1 text-xs text-amber-100/30">
+                  The merchant guild will prepare your order shortly.
+                </p>
               </div>
 
 
-              {/* Continue Shopping */}
               <Link
                 href="/wares"
                 className="
                   group
                   relative
-                  mt-9
                   inline-flex
+                  shrink-0
                   items-center
+                  justify-center
                   gap-2
                   overflow-hidden
                   rounded-lg
                   border
-                  border-amber-300/50
+                  border-amber-400/30
                   bg-amber-300
-                  px-7
-                  py-3
+                  px-5
+                  py-2.5
+                  text-sm
                   font-semibold
                   text-[#1b1625]
-                  shadow-[0_0_18px_rgba(251,191,36,0.15)]
+                  shadow-[0_0_15px_rgba(251,191,36,0.12)]
                   transition-all
                   duration-300
                   hover:bg-amber-200
-                  hover:shadow-[0_0_30px_rgba(251,191,36,0.35)]
+                  hover:shadow-[0_0_25px_rgba(251,191,36,0.3)]
                 "
               >
-
-                {/* Magical Shine */}
                 <span
                   className="
                     pointer-events-none
@@ -210,41 +309,26 @@ export default async function CheckoutSuccessPage({
                 <span className="relative">
                   ✦
                 </span>
-
                 <span className="relative">
                   Continue Shopping
                 </span>
-
               </Link>
-
             </div>
-
-
-            {/* Bottom Decoration */}
-            <div className="border-t border-amber-900/20 px-6 py-5">
-
-              <p className="text-xs italic text-amber-100/25">
-                May your dice roll true and your adventures be legendary.
-              </p>
-
-            </div>
-
           </div>
 
 
-          {/* Decorative Divider */}
-          <div className="mt-10 flex items-center gap-4">
+          {/* Bottom accent */}
+          <div className="h-px bg-linear-to-r` from-transparent via-amber-400/30 to-transparent" />
 
-            <div className="h-px flex-1 bg-amber-900/20" />
+        </div>
 
-            <span className="text-sm tracking-widest text-amber-400/30">
-              ✦ ✦ ✦
-            </span>
 
-            <div className="h-px flex-1 bg-amber-900/20" />
+        {/* FOOTER */}
 
-          </div>
-
+        <div className="mt-8 text-center">
+          <p className="text-xs italic text-amber-100/20">
+            May your dice roll true and your adventures be legendary.
+          </p>
         </div>
 
       </div>
