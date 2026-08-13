@@ -52,28 +52,31 @@ const articles = [
 ];
 
 export default function HomePage() {
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchFeatured() {
+    async function fetchFeaturedProducts() {
       setLoading(true);
+
       const { data, error } = await supabase
         .from("products")
         .select("*, category (name)")
-        .order("created_at", { ascending: false })
-        .limit(4);
+        .order("created_at", { ascending: false });
 
       if (error) {
         console.error("Error fetching featured products:", error.message);
       } else {
-        setFeaturedProducts((data ?? []) as Product[]);
+        setProducts((data ?? []) as Product[]);
       }
+
       setLoading(false);
     }
 
-    fetchFeatured();
+    fetchFeaturedProducts();
   }, []);
+
+  const featuredProducts = products.slice(0, 4);
 
   return (
     <main className="min-h-screen bg-[#1b1625] text-amber-100">
