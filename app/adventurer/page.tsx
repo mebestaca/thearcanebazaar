@@ -65,12 +65,16 @@ export default function LoginPage() {
 }
 
   async function signInWithGoogle() {
+    console.log("chec");
+    /*
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/adventurer/profile`,
       },
     });
+    */
+    router.replace('/comingsoon');
   }
 
   return (
